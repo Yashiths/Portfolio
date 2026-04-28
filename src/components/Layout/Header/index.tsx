@@ -42,7 +42,6 @@ const Header: React.FC = () => {
       <div className="lg:py-0 py-2">
         <div className="container mx-auto lg:max-w-screen-xl md:max-w-screen-md flex items-center justify-between px-4">
           
-          {/* අලුත් Logo එක - Icon එක වෙනුවට නම පාවිච්චි කරලා තියෙන්නේ */}
           <Link href="/" className="flex items-center gap-2">
             <div className="bg-primary text-darkmode w-10 h-10 flex items-center justify-center rounded-lg font-bold text-xl">
               YS
@@ -52,7 +51,6 @@ const Header: React.FC = () => {
             </span>
           </Link>
 
-          {/* Desktop Navigation - මෙතන දැන් අර පරණ links නැහැ */}
           <nav className="hidden lg:flex flex-grow items-center gap-8 justify-center">
             {headerData.map((item, index) => (
               <HeaderLink key={index} item={item} />
@@ -60,13 +58,6 @@ const Header: React.FC = () => {
           </nav>
 
           <div className="flex items-center gap-4">
-            <Link
-              href="#contact"
-              className="hidden lg:block bg-primary text-darkmode hover:bg-white hover:scale-105 border border-primary font-bold px-6 py-2.5 rounded-lg transition-all duration-300"
-            >
-              Hire Me
-            </Link>
-
             {/* Mobile Menu Toggle */}
             <button
               onClick={() => setNavbarOpen(!navbarOpen)}
@@ -96,13 +87,6 @@ const Header: React.FC = () => {
             {headerData.map((item, index) => (
               <MobileHeaderLink key={index} item={item} />
             ))}
-            <Link
-              href="#contact"
-              className="w-full text-center bg-primary text-darkmode px-4 py-3 rounded-lg font-bold"
-              onClick={() => setNavbarOpen(false)}
-            >
-              Hire Me
-            </Link>
           </nav>
         </div>
       </div>

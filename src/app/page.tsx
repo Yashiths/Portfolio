@@ -4,7 +4,7 @@ import Work from "@/components/Home/work";
 import TimeLine from "@/components/Home/timeline";
 import Portfolio from "@/components/Home/portfolio";
 import Upgrade from "@/components/Home/upgrade";
-import Perks from "@/components/Home/perks";
+
 import { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Yashith Sasmitha",
@@ -18,7 +18,6 @@ export default function Home() {
       <TimeLine />
       <Portfolio />
       <Upgrade />
-      <Perks />
     </main>
   );
 }
