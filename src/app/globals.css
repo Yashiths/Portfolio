@@ -6,12 +6,13 @@ html {
   scroll-behavior: smooth;
 }
 
-section{
+section {
   @apply bg-darkmode;
 }
 
+/* --- Blog Details --- */
 .blog-details p, .blog-details hr {
-  @apply mb-8 ;
+  @apply mb-8;
 }
 
 .blog-details hr {
@@ -40,4 +41,25 @@ section{
 
 .blog-details h3 {
   @apply mb-6 text-2xl font-bold dark:text-white sm:text-[28px] sm:leading-[40px];
+}
+
+/* --- Swiper Customization --- */
+.swiper-button-next::after, 
+.swiper-button-prev::after {
+  @apply text-primary !important;
+  font-size: 24px !important;
+  font-weight: bold;
+}
+
+.swiper-pagination-bullet {
+  @apply bg-white opacity-40 !important;
+}
+
+.swiper-pagination-bullet-active {
+  @apply bg-primary opacity-100 !important;
+}
+
+.swiper-slide-active > div {
+  @apply shadow-[0_0_30px_rgba(0,255,0,0.2)] border-primary/30 !important;
+  transition: all 0.5s ease;
 }

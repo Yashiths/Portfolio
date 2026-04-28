@@ -60,6 +60,17 @@ export const pricedeta: {
     width: 48,
     height: 48,
     padding: "p-1",
+  },
+  {
+    title: "Graphic ",
+    short: "Design",
+    icon: "/images/icons/graphicdesign.png",
+    background: "bg-light_grey",
+    price: "Adobe",
+    mark: "Completed",
+    width: 48,
+    height: 48,
+    padding: "p-1",
   }
 ];
 
@@ -98,6 +109,12 @@ export const perksData: {
     icon: "/images/perks/icon-academy.svg", 
     title: "Tech Support", 
     text: "Providing ongoing maintenance and updates for every project.", 
+    space: "lg:mt-4" 
+  },
+  { 
+    icon: "/images/perks/icon-academy.svg", 
+    title: "Creative Artistry", 
+    text: "Bringing ideas to life through stunning graphics. From social media visuals to complex brand assets, I design with precision and style.", 
     space: "lg:mt-4" 
   },
 ];

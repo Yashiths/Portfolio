@@ -1,5 +1,5 @@
 {
-  "name": "crypgo_project",
+  "name": "Yashith Sasmitha",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -29,7 +29,8 @@
     "remark": "^15.0.1",
     "remark-html": "^16.0.1",
     "simple-icons": "^16.18.1",
-    "slick-carousel": "^1.8.1"
+    "slick-carousel": "^1.8.1",
+    "swiper": "^12.1.4"
   },
   "devDependencies": {
     "@types/aos": "^3.0.7",

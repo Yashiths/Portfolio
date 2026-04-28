@@ -1,77 +1,105 @@
 "use client";
+import React from "react";
 import Image from "next/image";
-import { motion } from "framer-motion";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { EffectCoverflow, Pagination, Navigation } from "swiper/modules";
 
-const AboutSection = () => {
+// Swiper styles
+import "swiper/css";
+import "swiper/css/effect-coverflow";
+import "swiper/css/pagination";
+import "swiper/css/navigation";
+
+const projectData = [
+  { title: "E-commerce Platform", tech: ["React", "Firebase"], img: "images/projects/1.png" },
+  { title: "Fitness Tracking App", tech: ["React Native"], img: "images/projects/2.png" },
+  { title: "Personal Portfolio", tech: ["Next.js", "Framer"], img: "images/projects/3.png" },
+  { title: "T24 Banking System", tech: ["Java", "Temenos"], img: "images/projects/4.png" },
+  { title: "Furniture Web Store", tech: ["Next.js", "Firebase"], img: "images/projects/5.png" },
+  { title: "Inventory System", tech: ["React.js", "MongoDB"], img: "images/projects/6.png" },
+];
+
+const ProjectCarousel = () => {
   return (
-    <section className="relative py-20 overflow-hidden" id="about">
-      <div className="container mx-auto lg:max-w-screen-xl md:max-w-screen-md px-4">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          
-          {/* Left Side: Content */}
-          <motion.div
-            initial={{ x: -50, opacity: 0 }}
-            whileInView={{ x: 0, opacity: 1 }}
-            transition={{ duration: 0.8 }}
-          >
-            <h4 className="text-primary text-20 font-medium mb-4">Get to know me</h4>
-            <h2 className="text-white text-40 md:text-50 font-semibold leading-tight mb-6">
-              Turning complex problems into <span className="text-primary">elegant solutions.</span>
-            </h2>
-            <p className="text-muted text-lg leading-relaxed mb-8">
-              I am a passionate Full-Stack Developer and Software Engineer with expertise in building high-performance web applications. 
-              With a background in Temenos T24 core banking and modern frameworks like Next.js, I bridge the gap between robust backend logic and seamless frontend experiences.
-            </p>
-            
-            <div className="flex flex-wrap gap-5">
-              {/* Download CV Button */}
-              <a 
-                href="/path-to-your-cv.pdf" 
-                download 
-                className="bg-primary hover:bg-primary/80 text-black px-8 py-4 rounded-full font-semibold transition-all flex items-center gap-2"
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                Download CV
-              </a>
-              
-              {/* Hire Me / Contact Button */}
-              <a 
-                href="#contact" 
-                className="border border-white/20 hover:border-primary text-white px-8 py-4 rounded-full font-semibold transition-all"
-              >
-                Hire Me
-              </a>
-            </div>
-          </motion.div>
+    <section className="py-24 bg-darkmode overflow-hidden" id="projects">
+      <div className="container mx-auto px-4 mb-12 text-center">
+        <h2 className="text-white text-4xl md:text-5xl font-bold leading-tight">
+          Latest <span className="text-primary">Projects</span>
+        </h2>
+      </div>
 
-          {/* Right Side: Simple Stats or Image Placeholder */}
-          <motion.div
-            initial={{ x: 50, opacity: 0 }}
-            whileInView={{ x: 0, opacity: 1 }}
-            transition={{ duration: 0.8 }}
-            className="relative"
-          >
-            <div className="grid grid-cols-2 gap-6">
-              <div className="bg-light_grey/10 p-8 rounded-3xl border border-white/5 text-center">
-                <h3 className="text-primary text-40 font-bold mb-2">2+</h3>
-                <p className="text-muted uppercase tracking-wider text-sm">Years Experience</p>
-              </div>
-              <div className="bg-light_grey/10 p-8 rounded-3xl border border-white/5 text-center">
-                <h3 className="text-primary text-40 font-bold mb-2">15+</h3>
-                <p className="text-muted uppercase tracking-wider text-sm">Projects Done</p>
-              </div>
-              <div className="bg-light_grey/10 p-8 rounded-3xl border border-white/5 text-center col-span-2">
-                <p className="text-white text-lg italic">
-                  "Driven by fitness and code, I believe in consistency and continuous improvement."
-                </p>
-              </div>
-            </div>
-          </motion.div>
+      <div className="relative w-full max-w-[1400px] mx-auto px-10">
+        <Swiper
+          effect={"coverflow"}
+          grabCursor={true}
+          centeredSlides={true}
+          slidesPerView={"auto"} 
+          loop={true}
+          coverflowEffect={{
+            rotate: 30, 
+            stretch: 0, 
+            depth: 150, 
+            modifier: 1.5,
+            slideShadows: true,
+          }}
+          navigation={{
+            nextEl: ".swiper-button-next",
+            prevEl: ".swiper-button-prev",
+          }}
+          pagination={{
+            clickable: true,
+            el: ".swiper-custom-pagination",
+          }}
+          modules={[EffectCoverflow, Pagination, Navigation]}
+          className="mySwiper py-12"
+        >
+          {projectData.map((project, index) => (
 
-        </div>
+            <SwiperSlide key={index} className="!w-[300px] md:!w-[380px]">
+              <div className="bg-[#0b1120] border border-white/5 rounded-3xl p-5 shadow-2xl transition-all duration-500 group hover:border-primary/20 backdrop-blur-sm">
+                
+                <div className="relative w-full h-52 mb-5 rounded-2xl overflow-hidden bg-black/30">
+                  <Image
+                    src={project.img}
+                    alt={project.title}
+                    fill
+                    className="object-cover transition-transform duration-500 group-hover:scale-105"
+                    sizes="(max-width: 768px) 100vw, 380px"
+                  />
+                </div>
+
+                <h3 className="text-white text-xl font-semibold mb-3 tracking-tight">
+                  {project.title}
+                </h3>
+                
+                <div className="flex flex-wrap gap-2 mb-6">
+                  {project.tech.map((techItem) => (
+                    <span
+                      key={techItem}
+                      className="bg-primary/5 text-primary text-[9px] px-2.5 py-1 rounded-full border border-primary/10 uppercase font-medium tracking-wider"
+                    >
+                      {techItem}
+                    </span>
+                  ))}
+                </div>
+
+                <button className="w-full py-3.5 bg-primary text-black font-bold rounded-xl hover:bg-white transition-all duration-300 shadow-lg shadow-primary/10">
+                  Explore Project
+                </button>
+              </div>
+            </SwiperSlide>
+          ))}
+        </Swiper>
+
+        {/* Navigation Arrows */}
+        <div className="swiper-button-prev !text-primary !left-2 after:!text-2xl after:!font-bold"></div>
+        <div className="swiper-button-next !text-primary !right-2 after:!text-2xl after:!font-bold"></div>
+        
+        {/* Custom Pagination */}
+        <div className="swiper-custom-pagination flex justify-center gap-2 mt-6"></div>
       </div>
     </section>
   );
 };
 
-export default AboutSection;
+export default ProjectCarousel;

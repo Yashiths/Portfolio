@@ -40,10 +40,10 @@ const Footer: FC = () => {
               </Link>
             </div>
             <h3 className="text-white text-24 font-medium sm:mt-20 mt-12">
-              2026 Copyright | Crypgo
+              2026 Copyright | Yashith Sasmitha
             </h3>
             <h3 className="text-white text-24 font-medium sm:mt-4 mt-2">
-              Distributed by <a href="https://themewagon.com" target="_blank" className="hover:text-primary transition-all">ThemeWagon</a>
+              Distributed by <a href="https://Yashith.com" target="_blank" className="hover:text-primary transition-all">Yashith</a>
             </h3>
           </div>
 

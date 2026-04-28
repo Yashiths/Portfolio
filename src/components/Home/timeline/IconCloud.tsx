@@ -65,7 +65,14 @@ const iconSlugs = [
   "tailwindcss",
   "framer",
   "strapi",
-  "appwrite"
+  "appwrite",
+  "adobephotoshop",
+  "adobeillustrator",
+  "adobepremierepro",
+  "adobeaftereffects",
+  "canva",
+  "dribbble",
+  "behance" 
 ];
 
 export default function IconCloud() {
