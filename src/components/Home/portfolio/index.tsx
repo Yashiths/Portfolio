@@ -1,76 +1,77 @@
 "use client";
 import Image from "next/image";
-import { portfolioData } from "@/app/api/data";
 import { motion } from "framer-motion";
-import { getImagePrefix } from "@/utils/utils";
 
-const Portfolio = () => {
+const AboutSection = () => {
   return (
-    <section className="md:pt-48 sm:pt-28 pt-12" id="portfolio">
-      <div className="container mx-auto lg:max-w-screen-xl px-4 sm:px-6">
-        <div className="grid lg:grid-cols-2 items-center gap-20">
+    <section className="relative py-20 overflow-hidden" id="about">
+      <div className="container mx-auto lg:max-w-screen-xl md:max-w-screen-md px-4">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+          
+          {/* Left Side: Content */}
           <motion.div
-            whileInView={{ y: 0, opacity: 1 }}
-            initial={{ y: "-100%", opacity: 0 }}
-            transition={{ duration: 0.6 }}
-            className="lg:-ml-32"
+            initial={{ x: -50, opacity: 0 }}
+            whileInView={{ x: 0, opacity: 1 }}
+            transition={{ duration: 0.8 }}
           >
-            <Image
-              src= {`${getImagePrefix()}images/portfolio/img-portfolio.png`}
-              alt="Crypto Portfolio"
-              width={780}
-              height={700}
-            />
-          </motion.div>
-
-          <motion.div
-            whileInView={{ y: 0, opacity: 1 }}
-            initial={{ y: "100%", opacity: 0 }}
-            transition={{ duration: 0.6 }}
-          >
-            <p className="sm:text-28 text-18 text-muted mb-4">
-              Cryptocurrency <span className="text-primary">Portfolio</span>
-            </p>
-            <h2 className="text-white sm:text-40 text-30 mb-4 font-medium">
-              Create your crypto portfolio today with Cryp
-              <span className="text-primary">Go</span>!
+            <h4 className="text-primary text-20 font-medium mb-4">Get to know me</h4>
+            <h2 className="text-white text-40 md:text-50 font-semibold leading-tight mb-6">
+              Turning complex problems into <span className="text-primary">elegant solutions.</span>
             </h2>
-            <p className="text-muted text-opacity-60 text-18">
-              Coinbase has a variety of features that make it the best
-              <br className="md:block hidden" /> place to start trading.
+            <p className="text-muted text-lg leading-relaxed mb-8">
+              I am a passionate Full-Stack Developer and Software Engineer with expertise in building high-performance web applications. 
+              With a background in Temenos T24 core banking and modern frameworks like Next.js, I bridge the gap between robust backend logic and seamless frontend experiences.
             </p>
-
-            <table className="w-full sm:w-[80%]">
-              <tbody>
-                {portfolioData.map((item, index) => (
-                  <tr
-                    key={index}
-                    className="border-b border-dark_border border-opacity-10"
-                  >
-                    <td className="py-5">
-                      <div className="bg-primary p-4 rounded-full bg-opacity-20 w-fit">
-                        <Image
-                          src= {`${getImagePrefix()}${item.image}`}
-                          alt={item.title}
-                          width={35}
-                          height={35}
-                        />
-                      </div>
-                    </td>
-                    <td className="py-5">
-                      <h4 className="text-muted sm:text-28 text-22 ml-5">
-                        {item.title}
-                      </h4>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+            
+            <div className="flex flex-wrap gap-5">
+              {/* Download CV Button */}
+              <a 
+                href="/path-to-your-cv.pdf" 
+                download 
+                className="bg-primary hover:bg-primary/80 text-black px-8 py-4 rounded-full font-semibold transition-all flex items-center gap-2"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                Download CV
+              </a>
+              
+              {/* Hire Me / Contact Button */}
+              <a 
+                href="#contact" 
+                className="border border-white/20 hover:border-primary text-white px-8 py-4 rounded-full font-semibold transition-all"
+              >
+                Hire Me
+              </a>
+            </div>
           </motion.div>
+
+          {/* Right Side: Simple Stats or Image Placeholder */}
+          <motion.div
+            initial={{ x: 50, opacity: 0 }}
+            whileInView={{ x: 0, opacity: 1 }}
+            transition={{ duration: 0.8 }}
+            className="relative"
+          >
+            <div className="grid grid-cols-2 gap-6">
+              <div className="bg-light_grey/10 p-8 rounded-3xl border border-white/5 text-center">
+                <h3 className="text-primary text-40 font-bold mb-2">2+</h3>
+                <p className="text-muted uppercase tracking-wider text-sm">Years Experience</p>
+              </div>
+              <div className="bg-light_grey/10 p-8 rounded-3xl border border-white/5 text-center">
+                <h3 className="text-primary text-40 font-bold mb-2">15+</h3>
+                <p className="text-muted uppercase tracking-wider text-sm">Projects Done</p>
+              </div>
+              <div className="bg-light_grey/10 p-8 rounded-3xl border border-white/5 text-center col-span-2">
+                <p className="text-white text-lg italic">
+                  "Driven by fitness and code, I believe in consistency and continuous improvement."
+                </p>
+              </div>
+            </div>
+          </motion.div>
+
         </div>
       </div>
     </section>
   );
 };
 
-export default Portfolio;
+export default AboutSection;

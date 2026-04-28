@@ -1,146 +1,129 @@
 "use client";
 import Image from "next/image";
-import { timelineData } from "@/app/api/data";
-import { motion, useInView } from "framer-motion";
-import { useRef } from "react";
+import { motion } from "framer-motion";
 import { getImagePrefix } from "@/utils/utils";
+import IconCloud from "./IconCloud";
 
-const TimeLine = () => {
-  const ref = useRef(null);
-  const inView = useInView(ref);
+const skillsData = [
+  { 
+    icon: "images/timeline/icon-planning.svg", 
+    title: "Frontend Development", 
+    text: "Crafting modern web apps with React.js, Next.js, and Tailwind CSS."
+  },
+  { 
+    icon: "images/timeline/icon-refinement.svg", 
+    title: "Backend & DB", 
+    text: "Building robust systems using Node.js, Express, and databases like MongoDB or PostgreSQL."
+  },
+  { 
+    icon: "images/timeline/icon-prototype.svg", 
+    title: "Full Stack Design", 
+    text: "Ensuring high-performance and user-centric application architecture."
+  },
+  { 
+    icon: "images/timeline/icon-support.svg", 
+    title: "Cloud & Dev Tools", 
+    text: "Leveraging Firebase, Docker, and Git for scalable solutions."
+  }
+];
 
-  const TopAnimation = {
-    initial: { y: "-100%", opacity: 0 },
-    animate: inView ? { y: 0, opacity: 1 } : { y: "-100%", opacity: 0 },
-    transition: { duration: 0.6, delay: 0.4 },
-  };
+const SkillsSection = () => {
   return (
-    <section className="md:pt-40 pt-9" id="development">
+    <section className="md:pt-40 pt-9" id="stack">
       <div className="container mx-auto lg:max-w-screen-xl md:max-w-screen-md lg:px-16 px-4">
         <div className="text-center">
           <motion.div
             whileInView={{ y: 0, opacity: 1 }}
-            initial={{ y: "-100%", opacity: 0 }}
+            initial={{ y: "-50%", opacity: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <p className="text-muted sm:text-28 text-18 mb-9">
-              Development <span className="text-primary">timeline</span>
-            </p>
-            <h2 className="text-white sm:text-40 text-30 font-medium lg:w-80% mx-auto mb-20">
-              We can enter at any point or help you all the way through the
-              development cycle.
+            <h2 className="text-white sm:text-48 text-36 font-medium lg:w-[80%] mx-auto mb-6">
+              Skills & Technologies
             </h2>
+            <p className="text-muted text-opacity-80 sm:text-20 text-16 mb-20 max-w-[600px] mx-auto">
+              Here are the technologies I work with to bring ideas to life
+            </p>
           </motion.div>
-          <motion.div
-            whileInView={{ scale: 1, opacity: 1 }}
-            initial={{ scale: 0.8, opacity: 0 }}
-            transition={{ duration: 0.6 }}
-          >
-            <div className="md:block hidden relative">
-              <div>
-                <Image
-                  src= {`${getImagePrefix()}images/timeline/img-timeline.png`} 
-                  alt="image"
-                  width={1220}
-                  height={1000}
-                  className="w-80% mx-auto"
-                />
-              </div>
-              <div className="absolute lg::top-40 top-36 lg:left-0 -left-20 w-72 flex items-center gap-6">
-                <div className="text-right">
-                  <h5 className="text-muted text-28 mb-3">Planning</h5>
-                  <p className="text-18 text-muted text-opacity-60">
-                    Map the project's scope and architecture
-                  </p>
-                </div>
-                <div className="bg-light_grey bg-opacity-45 backdrop-blur-sm px-6 py-2 h-fit rounded-full">
-                  <Image
-                    src= {`${getImagePrefix()}images/timeline/icon-planning.svg`}
-                    alt="Planning"
-                    width={44}
-                    height={44}
-                    className="w-16 h-16 "
-                  />
+
+          <div className="relative">
+            {/* Desktop View */}
+            <div className="md:block hidden relative min-h-[650px] w-full">
+              
+              {/* Central Icon Cloud - Added pointer-events-auto */}
+              <div className="absolute inset-0 flex justify-center items-center z-10 pointer-events-auto">
+                <div className="w-[500px] h-[500px] flex items-center justify-center cursor-pointer">
+                   <IconCloud />
                 </div>
               </div>
-              <div className="absolute lg:top-40 top-36 lg:right-0 -right-20 w-72 flex items-center gap-6">
-                <div className="bg-light_grey bg-opacity-45 backdrop-blur-sm p-6 h-fit rounded-full">
-                  <Image
-                    src= {`${getImagePrefix()}images/timeline/icon-refinement.svg`}
-                    alt="Refinement"
-                    width={44}
-                    height={44}
-                  />
+
+              {/* Labels Layer - Added pointer-events-none so it doesn't block the cloud */}
+              <div className="relative z-20 w-full h-full min-h-[650px] pointer-events-none">
+                
+                {/* Skill 1 - Top Left (Added pointer-events-auto to individual items) */}
+                <div className="absolute top-0 left-0 w-80 flex items-center gap-4 text-right justify-end pointer-events-auto">
+                  <div>
+                    <h5 className="text-muted text-2xl font-medium">{skillsData[0].title}</h5>
+                    <p className="text-sm text-muted opacity-60">{skillsData[0].text}</p>
+                  </div>
+                  <div className="bg-light_grey/20 p-4 rounded-full border border-white/5">
+                    <Image src={`${getImagePrefix()}${skillsData[0].icon}`} alt={skillsData[0].title} width={40} height={40} />
+                  </div>
                 </div>
-                <div className="text-left">
-                  <h5 className="text-muted text-28 mb-3">Refinement</h5>
-                  <p className="text-18 text-muted text-opacity-60">
-                    Refine and improve your solution
-                  </p>
+
+                {/* Skill 2 - Top Right */}
+                <div className="absolute top-0 right-0 w-80 flex items-center gap-4 text-left pointer-events-auto">
+                  <div className="bg-light_grey/20 p-4 rounded-full border border-white/5">
+                    <Image src={`${getImagePrefix()}${skillsData[1].icon}`} alt={skillsData[1].title} width={40} height={40} />
+                  </div>
+                  <div>
+                    <h5 className="text-muted text-2xl font-medium">{skillsData[1].title}</h5>
+                    <p className="text-sm text-muted opacity-60">{skillsData[1].text}</p>
+                  </div>
                 </div>
-              </div>
-              <div className="absolute lg:bottom-48 bottom-36 lg:left-0 -left-20 w-72 flex items-center gap-6">
-                <div className="text-right">
-                  <h5 className="text-muted text-28 mb-3">Prototype</h5>
-                  <p className="text-18 text-muted text-opacity-60">
-                    Build a working prototype to test your product
-                  </p>
+
+                {/* Skill 3 - Bottom Left */}
+                <div className="absolute bottom-10 left-0 w-80 flex items-center gap-4 text-right justify-end pointer-events-auto">
+                  <div>
+                    <h5 className="text-muted text-2xl font-medium">{skillsData[2].title}</h5>
+                    <p className="text-sm text-muted opacity-60">{skillsData[2].text}</p>
+                  </div>
+                  <div className="bg-light_grey/20 p-4 rounded-full border border-white/5">
+                    <Image src={`${getImagePrefix()}${skillsData[2].icon}`} alt={skillsData[2].title} width={40} height={40} />
+                  </div>
                 </div>
-                <div className="bg-light_grey bg-opacity-45 backdrop-blur-sm px-6 py-2 h-fit rounded-full">
-                  <Image
-                    src= {`${getImagePrefix()}images/timeline/icon-prototype.svg`}
-                    alt="Prototype"
-                    width={44}
-                    height={44}
-                    className="w-16 h-16 "
-                  />
-                </div>
-              </div>
-              <div className="absolute lg:bottom-48 bottom-36 lg:right-0 -right-20 w-72 flex items-center gap-6">
-                <div className="bg-light_grey bg-opacity-45 backdrop-blur-sm px-6 py-2 h-fit rounded-full">
-                  <Image
-                    src= {`${getImagePrefix()}images/timeline/icon-support.svg`}
-                    alt="Scale and support"
-                    width={44}
-                    height={44}
-                    className="w-16 h-16"
-                  />
-                </div>
-                <div className="text-left">
-                  <h5 className="text-muted text-nowrap text-28 mb-3">
-                    Support
-                  </h5>
-                  <p className="text-18 text-muted text-opacity-60">
-                    Deploy the product and ensure full support by us
-                  </p>
+
+                {/* Skill 4 - Bottom Right */}
+                <div className="absolute bottom-10 right-0 w-80 flex items-center gap-4 text-left pointer-events-auto">
+                  <div className="bg-light_grey/20 p-4 rounded-full border border-white/5">
+                    <Image src={`${getImagePrefix()}${skillsData[3].icon}`} alt={skillsData[3].title} width={40} height={40} />
+                  </div>
+                  <div>
+                    <h5 className="text-muted text-2xl font-medium">{skillsData[3].title}</h5>
+                    <p className="text-sm text-muted opacity-60">{skillsData[3].text}</p>
+                  </div>
                 </div>
               </div>
             </div>
-            <div className="grid sm:grid-cols-2 gap-8 md:hidden">
-              {timelineData.map((item, index) => (
-                <div key={index} className="flex items-center gap-6">
-                  <div className="bg-light_grey bg-opacity-45 p-6 rounded-full">
-                    <Image
-                      src= {`${getImagePrefix()}${item.icon}`}
-                      alt={item.title}
-                      width={44}
-                      height={44}
-                    />
+
+            {/* Mobile View */}
+            <div className="grid grid-cols-1 gap-8 md:hidden mt-10">
+              {skillsData.map((item, index) => (
+                <div key={index} className="flex items-center gap-6 p-4 bg-light_grey/10 rounded-xl">
+                  <div className="bg-primary/20 p-4 rounded-full">
+                    <Image src={`${getImagePrefix()}${item.icon}`} alt={item.title} width={35} height={35} />
                   </div>
                   <div className="text-start">
-                    <h4 className="text-28 text-muted mb-2">{item.title}</h4>
-                    <p className="text-muted text-opacity-60 text-18">
-                      {item.text}
-                    </p>
+                    <h4 className="text-white text-xl font-medium">{item.title}</h4>
+                    <p className="text-muted text-sm">{item.text}</p>
                   </div>
                 </div>
               ))}
             </div>
-          </motion.div>
+          </div>
         </div>
       </div>
     </section>
   );
 };
 
-export default TimeLine;
+export default SkillsSection;

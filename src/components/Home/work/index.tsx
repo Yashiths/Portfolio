@@ -1,85 +1,77 @@
 "use client";
 import Image from "next/image";
-import { motion, useInView } from "framer-motion";
-import { useRef } from "react";
-import { getImagePrefix } from "@/utils/utils";
+import { motion } from "framer-motion";
 
-const Work = () => {
-  const ref = useRef(null);
-  const inView = useInView(ref);
-
-  const TopAnimation = {
-    initial: { y: "-100%", opacity: 0 },
-    animate: inView ? { y: 0, opacity: 1 } : { y: "-100%", opacity: 0 },
-    transition: { duration: 0.6, delay: 0.4 },
-  };
-
-  const bottomAnimation = {
-    initial: { y: "100%", opacity: 0 },
-    animate: inView ? { y: 0, opacity: 1 } : { y: "100%", opacity: 0 },
-    transition: { duration: 0.6, delay: 0.4 },
-  };
-
-  const services = [
-    {
-      icon: "/images/icons/icon-consulting.svg",
-      text: "Blockchain Consulting",
-    },
-    {
-      icon: "/images/icons/icon-blockchain.svg",
-      text: "Blockchain Solutions",
-    },
-    {
-      icon: "/images/icons/icon-Services.svg",
-      text: "Custom Development",
-    },
-  ];
-
+const AboutSection = () => {
   return (
-    <section className="md:pt-28" id="work">
-      <div className="container mx-auto lg:max-w-screen-xl px-4">
-        <div ref={ref} className="grid grid-cols-12 items-center">
+    <section className="relative py-20 overflow-hidden" id="about">
+      <div className="container mx-auto lg:max-w-screen-xl md:max-w-screen-md px-4">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+          
+          {/* Left Side: Content */}
           <motion.div
-            {...bottomAnimation}
-            className="lg:col-span-7 col-span-12"
+            initial={{ x: -50, opacity: 0 }}
+            whileInView={{ x: 0, opacity: 1 }}
+            transition={{ duration: 0.8 }}
           >
-            <p className="sm:text-28 text-18 text-white">
-              Work with <span className="text-primary">us</span>
-            </p>
-            <h2 className="sm:text-40 text-30 text-white lg:w-full md:w-70% font-medium">
-              Successfully launch your blockchain project.
+            <h4 className="text-primary text-20 font-medium mb-4">Get to know me</h4>
+            <h2 className="text-white text-40 md:text-50 font-semibold leading-tight mb-6">
+              Turning complex problems into <span className="text-primary">elegant solutions.</span>
             </h2>
-            <div className="grid md:grid-cols-2 gap-7 mt-11">
-              {services.map((service, index) => (
-                <div key={index} className="flex items-center gap-5">
-                  <div className="px-5 py-5 bg-light_grey bg-opacity-30 rounded-full">
-                    <Image
-                      src= {`${getImagePrefix()}${service.icon}`}
-                      alt={`${service.text} icon`}
-                      width={40}
-                      height={40}
-                    />
-                  </div>
-                  <p className="text-24 text-muted">{service.text}</p>
-                </div>
-              ))}
+            <p className="text-muted text-lg leading-relaxed mb-8">
+              I am a passionate Full-Stack Developer and Software Engineer with expertise in building high-performance web applications. 
+              With a background in Temenos T24 core banking and modern frameworks like Next.js, I bridge the gap between robust backend logic and seamless frontend experiences.
+            </p>
+            
+            <div className="flex flex-wrap gap-5">
+              {/* Download CV Button */}
+              <a 
+                href="/path-to-your-cv.pdf" 
+                download 
+                className="bg-primary hover:bg-primary/80 text-black px-8 py-4 rounded-full font-semibold transition-all flex items-center gap-2"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                Download CV
+              </a>
+              
+              {/* Hire Me / Contact Button */}
+              <a 
+                href="#contact" 
+                className="border border-white/20 hover:border-primary text-white px-8 py-4 rounded-full font-semibold transition-all"
+              >
+                Hire Me
+              </a>
             </div>
           </motion.div>
-          <motion.div {...TopAnimation} className="lg:col-span-5 col-span-12">
-            <div className="2xl:-mr-40 mt-9 flex justify-center">
-              <Image
-                src= {`${getImagePrefix()}images/work/img-work-with-us.png`}
-                alt="image"
-                width={600}
-                height={425}
-                className="lg:w-full"
-              />
+
+          {/* Right Side: Simple Stats or Image Placeholder */}
+          <motion.div
+            initial={{ x: 50, opacity: 0 }}
+            whileInView={{ x: 0, opacity: 1 }}
+            transition={{ duration: 0.8 }}
+            className="relative"
+          >
+            <div className="grid grid-cols-2 gap-6">
+              <div className="bg-light_grey/10 p-8 rounded-3xl border border-white/5 text-center">
+                <h3 className="text-primary text-40 font-bold mb-2">2+</h3>
+                <p className="text-muted uppercase tracking-wider text-sm">Years Experience</p>
+              </div>
+              <div className="bg-light_grey/10 p-8 rounded-3xl border border-white/5 text-center">
+                <h3 className="text-primary text-40 font-bold mb-2">15+</h3>
+                <p className="text-muted uppercase tracking-wider text-sm">Projects Done</p>
+              </div>
+              <div className="bg-light_grey/10 p-8 rounded-3xl border border-white/5 text-center col-span-2">
+                <p className="text-white text-lg italic">
+                  "Driven by fitness and code, I believe in consistency and continuous improvement."
+                </p>
+              </div>
             </div>
           </motion.div>
+
         </div>
       </div>
     </section>
   );
 };
 
-export default Work;
+export default AboutSection;

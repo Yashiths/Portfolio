@@ -1,9 +1,9 @@
-export const footerlabels: { label: string; herf: string }[] = [
-  { label: "Home", herf: "#" },
-  { label: "Services", herf: "#services" },
-  { label: "Projects", herf: "#projects" },
-  { label: "Stack", herf: "#stack" },
-  { label: "Contact", herf: "#contact" },
+export const footerlabels: { label: string; href: string }[] = [
+  { label: "Home", href: "#" }, // herf -> href ලෙස වෙනස් කළා
+  { label: "Services", href: "#services" },
+  { label: "Projects", href: "#projects" },
+  { label: "Stack", href: "#stack" },
+  { label: "Contact", href: "#contact" },
 ];
 
 export const pricedeta: {
@@ -107,30 +107,35 @@ export const timelineData: {
   title: string;
   text: string;
   position: string;
+  href: string; // href එක ඇඩ් කළා
 }[] = [
   { 
     icon: "/images/timeline/icon-planning.svg", 
     title: "Planning", 
     text: "Analyzing requirements and mapping project architecture.", 
-    position: "md:top-0 md:left-0" 
+    position: "md:top-0 md:left-0",
+    href: "#" 
   },
   { 
     icon: "/images/timeline/icon-refinement.svg", 
     title: "Development", 
     text: "Writing clean, efficient code using modern frameworks.", 
-    position: "md:top-0 md:right-0" 
+    position: "md:top-0 md:right-0",
+    href: "#" 
   },
   { 
     icon: "/images/timeline/icon-prototype.svg", 
     title: "Testing", 
     text: "Ensuring high performance and bug-free user experience.", 
-    position: "md:bottom-0 md:left-0" 
+    position: "md:bottom-0 md:left-0",
+    href: "#" 
   },
   { 
     icon: "/images/timeline/icon-support.svg", 
     title: "Deployment", 
     text: "Launching the product and providing continuous support.", 
-    position: "md:bottom-0 md:right-0" 
+    position: "md:bottom-0 md:right-0",
+    href: "#" 
   }
 ];
 
