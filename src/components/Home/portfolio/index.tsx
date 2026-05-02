@@ -1,8 +1,12 @@
 "use client";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { EffectCoverflow, Pagination, Navigation } from "swiper/modules";
+
+// Firebase imports
+import { db } from "@/lib/firebase";
+import { collection, query, orderBy, limit, onSnapshot } from "firebase/firestore";
 
 // Swiper styles
 import "swiper/css";
@@ -10,16 +14,32 @@ import "swiper/css/effect-coverflow";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
 
-const projectData = [
-  { title: "E-commerce Platform", tech: ["React", "Firebase"], img: "images/projects/1.png" },
-  { title: "Fitness Tracking App", tech: ["React Native"], img: "images/projects/2.png" },
-  { title: "Personal Portfolio", tech: ["Next.js", "Framer"], img: "images/projects/3.png" },
-  { title: "T24 Banking System", tech: ["Java", "Temenos"], img: "images/projects/4.png" },
-  { title: "Furniture Web Store", tech: ["Next.js", "Firebase"], img: "images/projects/5.png" },
-  { title: "Inventory System", tech: ["React.js", "MongoDB"], img: "images/projects/6.png" },
-];
-
 const ProjectCarousel = () => {
+  const [projects, setProjects] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  // Fetch the latest 6 projects from Firestore
+  useEffect(() => {
+    const q = query(
+      collection(db, "projects"), 
+      orderBy("createdAt", "desc"), 
+      limit(6)
+    );
+    
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+      const projectsArray: any[] = [];
+      querySnapshot.forEach((doc) => {
+        projectsArray.push({ id: doc.id, ...doc.data() });
+      });
+      setProjects(projectsArray);
+      setLoading(false);
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  if (loading) return null;
+
   return (
     <section className="py-24 bg-darkmode overflow-hidden" id="projects">
       <div className="container mx-auto px-4 mb-12 text-center">
@@ -34,7 +54,7 @@ const ProjectCarousel = () => {
           grabCursor={true}
           centeredSlides={true}
           slidesPerView={"auto"} 
-          loop={true}
+          loop={projects.length > 3}
           coverflowEffect={{
             rotate: 30, 
             stretch: 0, 
@@ -53,14 +73,13 @@ const ProjectCarousel = () => {
           modules={[EffectCoverflow, Pagination, Navigation]}
           className="mySwiper py-12"
         >
-          {projectData.map((project, index) => (
-
-            <SwiperSlide key={index} className="!w-[300px] md:!w-[380px]">
-              <div className="bg-[#0b1120] border border-white/5 rounded-3xl p-5 shadow-2xl transition-all duration-500 group hover:border-primary/20 backdrop-blur-sm">
+          {projects.map((project) => (
+            <SwiperSlide key={project.id} className="!w-[300px] md:!w-[380px]">
+              <div className="bg-[#0b1120] border border-white/5 rounded-3xl p-5 shadow-2xl transition-all duration-500 group hover:border-primary/20 backdrop-blur-sm h-full">
                 
                 <div className="relative w-full h-52 mb-5 rounded-2xl overflow-hidden bg-black/30">
                   <Image
-                    src={project.img}
+                    src={project.imageUrl || "/images/projects/placeholder.png"}
                     alt={project.title}
                     fill
                     className="object-cover transition-transform duration-500 group-hover:scale-105"
@@ -73,29 +92,31 @@ const ProjectCarousel = () => {
                 </h3>
                 
                 <div className="flex flex-wrap gap-2 mb-6">
-                  {project.tech.map((techItem) => (
+                  {project.tags && project.tags.map((tag: string) => (
                     <span
-                      key={techItem}
+                      key={tag}
                       className="bg-primary/5 text-primary text-[9px] px-2.5 py-1 rounded-full border border-primary/10 uppercase font-medium tracking-wider"
                     >
-                      {techItem}
+                      {tag}
                     </span>
                   ))}
                 </div>
 
-                <button className="w-full py-3.5 bg-primary text-black font-bold rounded-xl hover:bg-white transition-all duration-300 shadow-lg shadow-primary/10">
+                <a 
+                  href={project.github || "#"} 
+                  target="_blank" 
+                  className="block w-full py-3.5 bg-primary text-black text-center font-bold rounded-xl hover:bg-white transition-all duration-300 shadow-lg shadow-primary/10"
+                >
                   Explore Project
-                </button>
+                </a>
               </div>
             </SwiperSlide>
           ))}
         </Swiper>
 
-        {/* Navigation Arrows */}
         <div className="swiper-button-prev !text-primary !left-2 after:!text-2xl after:!font-bold"></div>
         <div className="swiper-button-next !text-primary !right-2 after:!text-2xl after:!font-bold"></div>
         
-        {/* Custom Pagination */}
         <div className="swiper-custom-pagination flex justify-center gap-2 mt-6"></div>
       </div>
     </section>

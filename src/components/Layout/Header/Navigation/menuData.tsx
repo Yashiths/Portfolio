@@ -5,5 +5,5 @@ export const headerData: HeaderItem[] = [
   { label: "About", href: "/about" },
   { label: "Projects", href: "/projects" },
   { label: "Stack", href: "/#stack" },
-  { label: "Contact", href: "/#contact" },
+  { label: "Contact", href: "/contact" },
 ];

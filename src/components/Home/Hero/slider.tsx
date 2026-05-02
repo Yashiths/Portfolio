@@ -1,7 +1,7 @@
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import { pricedeta } from "@/app/api/data";
+import { pricedeta } from "@/app/(site)/api/data";
 import Image from "next/image";
 import { getImagePrefix } from "@/utils/utils";
 
