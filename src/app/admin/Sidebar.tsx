@@ -7,49 +7,75 @@ import { auth } from "../../lib/firebase";
 import { signOut } from "firebase/auth";
 
 const menuItems = [
-  { name: "Dashboard", href: "/admin/dashboard", icon: "tabler:layout-dashboard" },
+  { name: "Overview", href: "/admin/dashboard", icon: "tabler:layout-dashboard" },
   { name: "Projects", href: "/admin/projects", icon: "tabler:briefcase" },
-  { name: "Manage Projects", href: "/admin/projects/manage", icon: "tabler:settings" },
+  { name: "Showcase", href: "/admin/projects/manage", icon: "tabler:stars" },
   { name: "Messages", href: "/admin/messages", icon: "tabler:mail" },
+  { name: "Finance", href: "/admin/expenses", icon: "tabler:chart-bar" }, 
+  { name: "Profile", href: "/admin/profile", icon: "tabler:user-cog" },
 ];
 
 export default function Sidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="w-64 bg-[#0b0f1a] border-r border-slate-800 flex flex-col h-screen sticky top-0">
-      <div className="p-6">
-        <div className="flex items-center gap-3 text-emerald-500 mb-10">
-          <div className="w-10 h-10 bg-emerald-500 rounded-xl flex items-center justify-center text-zinc-950 font-extrabold">YS</div>
-          <span className="text-white font-bold text-xl tracking-tight">Admin Console</span>
+    <aside className="w-64 bg-[#0b0f1a] border-r border-slate-800 flex flex-col h-screen sticky top-0 z-50 shadow-2xl">
+      <div className="p-8 flex-1">
+        
+        {/* BRANDING */}
+        <div className="flex items-center gap-3 text-emerald-500 mb-12 px-2">
+          <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center text-[#0b0f1a] font-black text-xl italic shadow-[0_0_20px_rgba(255,255,255,0.1)]">
+            YS
+          </div>
+          <div className="flex flex-col leading-none">
+            <span className="text-white font-black text-lg tracking-tighter uppercase italic">CONSOLE</span>
+            <span className="text-emerald-500 text-[8px] font-black uppercase tracking-[0.3em] mt-1">Status: Active</span>
+          </div>
         </div>
 
+        {/* NAVIGATION */}
         <nav className="space-y-2">
-          {menuItems.map((item) => (
-            <Link
-              key={item.name}
-              href={item.href}
-              className={`flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition-all ${
-                pathname === item.href 
-                ? "bg-emerald-500 text-zinc-950 shadow-lg shadow-emerald-500/20" 
-                : "text-slate-400 hover:bg-slate-800/50 hover:text-white"
-              }`}
-            >
-              <Icon icon={item.icon} width="22" />
-              {item.name}
-            </Link>
-          ))}
+          {menuItems.map((item) => {
+            const isActive = pathname === item.href;
+            return (
+              <Link
+                key={item.name}
+                href={item.href}
+                className={`flex items-center gap-3 px-5 py-3.5 rounded-2xl transition-all duration-300 group ${
+                  isActive 
+                    ? "bg-white text-black shadow-[0_10px_20px_rgba(255,255,255,0.1)] translate-x-1" 
+                    : "text-slate-500 hover:text-white hover:bg-slate-800/50"
+                }`}
+              >
+                <Icon 
+                  icon={item.icon} 
+                  width="20" 
+                  className={`transition-colors ${isActive ? "text-black" : "text-slate-600 group-hover:text-emerald-500"}`} 
+                />
+                <span className="text-[10px] font-black uppercase tracking-[0.15em] italic">
+                  {item.name}
+                </span>
+              </Link>
+            );
+          })}
         </nav>
       </div>
 
-      <div className="mt-auto p-6 border-t border-slate-800/50">
+      {/* LOGOUT AREA */}
+      <div className="p-8 border-t border-slate-800/50">
         <button 
           onClick={() => signOut(auth)}
-          className="flex items-center gap-3 px-4 py-3 w-full text-rose-500 hover:bg-rose-500/10 rounded-xl transition-all font-medium"
+          className="flex items-center gap-3 px-5 py-4 w-full text-rose-500 hover:bg-rose-500/5 rounded-2xl transition-all group border border-transparent hover:border-rose-500/20"
         >
-          <Icon icon="tabler:logout" width="22" />
-          Logout
+          <Icon icon="tabler:logout" width="20" className="group-hover:rotate-12 transition-transform" />
+          <span className="text-[10px] font-black uppercase tracking-[0.15em] italic">
+            Terminate Session
+          </span>
         </button>
+        
+        <p className="text-[8px] text-slate-700 font-black uppercase tracking-widest text-center mt-6 italic">
+          © 2026 YASHITH SASMITHA
+        </p>
       </div>
     </aside>
   );

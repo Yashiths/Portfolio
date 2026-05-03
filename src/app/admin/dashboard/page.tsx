@@ -5,33 +5,34 @@ import { useRouter } from "next/navigation";
 import { db } from "@/lib/firebase";
 import { collection, onSnapshot, query, orderBy } from "firebase/firestore";
 import { Icon } from "@iconify/react";
+import Link from "next/link";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell, PieChart, Pie } from "recharts";
 
 export default function Dashboard() {
   const { user, loading } = useAuth();
   const router = useRouter();
 
-  // Live Data States
+  // State Management
   const [projectCount, setProjectCount] = useState(0);
   const [totalRevenue, setTotalRevenue] = useState(0);
   const [messageCount, setMessageCount] = useState(0);
   const [projectsData, setProjectsData] = useState<any[]>([]);
   const [statusData, setStatusData] = useState<any[]>([]);
   const [barData, setBarData] = useState<any[]>([]);
+  const [urgentPayments, setUrgentPayments] = useState<any[]>([]);
 
-  // Authentication logic
+  // Authentication Guard
   useEffect(() => {
     if (!loading && !user) router.push("/admin/login");
   }, [user, loading, router]);
 
-  // Real-time Database listeners
+  // Real-time Listeners
   useEffect(() => {
     if (!user) return;
 
-    // Listen to ALL projects for stats & project count
+    // Projects Statistics Listener
     const unsubAll = onSnapshot(collection(db, "projects"), (snap) => {
-      setProjectCount(snap.size); // Total Project Count එක මෙතනින් ගන්නවා
-      
+      setProjectCount(snap.size); 
       let completed = 0, ongoing = 0, revenue = 0;
       snap.docs.forEach(doc => {
         const data = doc.data();
@@ -39,7 +40,6 @@ export default function Dashboard() {
         if (data.status === "Completed") completed++;
         else if (data.status === "Ongoing") ongoing++;
       });
-
       setTotalRevenue(revenue);
       setStatusData([
         { name: 'Completed', value: completed, color: '#10b981' },
@@ -48,12 +48,11 @@ export default function Dashboard() {
       ]);
     });
 
-    // Latest Projects List
+    // Operational Stream Listener
     const qLatest = query(collection(db, "projects"), orderBy("startDate", "desc"));
     const unsubLatest = onSnapshot(qLatest, (snap) => {
-      setProjectsData(snap.docs.slice(0, 5).map(d => ({ id: d.id, ...d.data() })));
-      
-      // Sample Bar Chart Data (මේක ඔයාට පසුව මාසික ආදායම අනුව හදන්න පුළුවන්)
+      setProjectsData(snap.docs.map(d => ({ id: d.id, ...d.data() })));
+      // Static Sample Data for Chart
       const data = [
         { name: 'Jan', sales: 30 }, { name: 'Feb', sales: 45 },
         { name: 'Mar', sales: 28 }, { name: 'Apr', sales: 50 },
@@ -62,41 +61,82 @@ export default function Dashboard() {
       setBarData(data);
     });
 
+    // Messages Listener
     const unsubMessages = onSnapshot(collection(db, "messages"), (snap) => {
       setMessageCount(snap.size);
+    });
+
+    // Financial Urgent Alerts Listener (Next 48 Hours)
+    const unsubExpenses = onSnapshot(collection(db, "expenses"), (snap) => {
+      const today = new Date();
+      const tomorrow = new Date();
+      tomorrow.setDate(today.getDate() + 1);
+
+      const formatDate = (d: Date) => d.toISOString().split('T')[0];
+      const todayStr = formatDate(today);
+      const tomorrowStr = formatDate(tomorrow);
+
+      const urgent = snap.docs
+        .map(doc => ({ id: doc.id, ...doc.data() }))
+        .filter((exp: any) => exp.date === todayStr || exp.date === tomorrowStr);
+      
+      setUrgentPayments(urgent);
     });
 
     return () => {
       unsubAll();
       unsubLatest();
       unsubMessages();
+      unsubExpenses();
     };
   }, [user]);
 
-  if (loading) return <div className="p-10 text-emerald-500 animate-pulse font-black">SYNCING SYSTEMS...</div>;
+  if (loading) return <div className="p-10 text-emerald-500 animate-pulse font-black italic uppercase tracking-widest">Initialising Terminal...</div>;
   if (!user) return null;
 
   return (
     <div className="space-y-8 p-6 lg:p-10 text-white bg-[#020617] min-h-screen">
       
-      {/* HEADER */}
+      {/* HEADER SECTION - Cleaned (No Button) */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
-          <h1 className="text-3xl font-black tracking-tighter bg-gradient-to-r from-white to-slate-500 bg-clip-text text-transparent uppercase italic">Overview</h1>
+          <h1 className="text-3xl font-black text-white tracking-tighter uppercase italic">Overview</h1>
           <p className="text-slate-500 text-xs font-bold mt-1 tracking-widest uppercase flex items-center gap-2">
             <span className="w-2 h-2 bg-emerald-500 rounded-full animate-ping"></span>
             Real-time Performance Metrics
           </p>
         </div>
-        <button 
-          onClick={() => router.push('/admin/projects')}
-          className="bg-white text-black font-black px-6 py-3 rounded-2xl flex items-center gap-2 hover:bg-emerald-500 transition-all shadow-xl shadow-white/5 active:scale-95"
-        >
-          <Icon icon="tabler:plus" width="22" /> NEW PROJECT
-        </button>
       </div>
 
-      {/* STATS GRID with Colorful Elements */}
+      {/* CRITICAL ALERTS */}
+      {urgentPayments.length > 0 && (
+        <div className="animate-in slide-in-from-top-4 duration-700">
+          <div className="bg-rose-500/10 border border-rose-500/20 p-6 rounded-[2.5rem] flex flex-col md:flex-row items-center justify-between gap-6 shadow-2xl shadow-rose-500/5">
+            <div className="flex items-center gap-5">
+              <div className="w-12 h-12 bg-rose-500 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-rose-500/20">
+                <Icon icon="tabler:alert-octagon" width="28" className="animate-pulse" />
+              </div>
+              <div>
+                <h4 className="text-white font-black uppercase italic tracking-tighter text-lg">Critical Payment Deadlines</h4>
+                <p className="text-rose-500/80 text-[10px] font-black uppercase tracking-[0.2em]">Action required within 48 hours</p>
+              </div>
+            </div>
+            <div className="flex flex-wrap gap-3">
+              {urgentPayments.map((pay, idx) => (
+                <div key={idx} className="bg-[#0b0f1a] px-4 py-2 rounded-xl border border-rose-500/30 flex items-center gap-3">
+                  <span className="text-white font-black text-[10px] uppercase italic">{pay.name}</span>
+                  <span className="text-rose-500 font-mono text-[10px] font-bold tracking-tighter border-l border-white/10 pl-3">LKR {pay.amount.toLocaleString()}</span>
+                </div>
+              ))}
+            </div>
+            <Link href="/admin/expences" className="bg-white text-zinc-950 px-6 py-2.5 rounded-xl font-black uppercase italic text-[10px] hover:bg-rose-500 hover:text-white transition-all shadow-xl">
+              Go to Expences
+            </Link>
+          </div>
+        </div>
+      )}
+
+      {/* ANALYTICS CARDS */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {[
           { label: "Total Projects", value: projectCount, sub: "Live Records", icon: "tabler:box-model-2", color: "text-emerald-400", bg: "bg-emerald-400/10" },
@@ -111,8 +151,6 @@ export default function Dashboard() {
             <p className="text-slate-500 text-[10px] font-black uppercase tracking-[0.2em]">{stat.label}</p>
             <p className="text-2xl font-black mt-1 italic">{stat.value}</p>
             <p className={`text-[10px] ${stat.color} mt-1 font-bold`}>{stat.sub}</p>
-            
-            {/* Soft Background Icon Decoration */}
             <div className={`absolute -right-4 -bottom-4 ${stat.color} opacity-5 group-hover:opacity-10 transition-opacity`}>
               <Icon icon={stat.icon} width="100" />
             </div>
@@ -120,10 +158,8 @@ export default function Dashboard() {
         ))}
       </div>
 
-      {/* CHARTS SECTION */}
+      {/* VISUAL ANALYTICS */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        
-        {/* Performance matrix */}
         <div className="lg:col-span-2 bg-[#0b0f1a] p-8 rounded-[3rem] border border-slate-800/50 shadow-2xl">
           <div className="flex justify-between items-center mb-8">
             <h3 className="text-lg font-black italic tracking-tighter uppercase">Performance Matrix</h3>
@@ -148,7 +184,6 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* Operational Status (Pie) */}
         <div className="bg-[#0b0f1a] p-8 rounded-[3rem] border border-slate-800/50 flex flex-col justify-between shadow-2xl">
           <h3 className="text-lg font-black italic tracking-tighter text-center uppercase">Workload Distribution</h3>
           <div className="h-64">
@@ -173,68 +208,65 @@ export default function Dashboard() {
             ))}
           </div>
         </div>
-
       </div>
 
-    // LATEST PROJECTS LIST (Dashboard එකේ පහළ Table එක)
-<div className="bg-[#0b0f1a] p-8 rounded-[2.5rem] border border-slate-800/50 shadow-2xl">
-  <div className="flex justify-between items-center mb-8 px-2">
-      <div>
-        <h3 className="text-white font-black text-lg uppercase tracking-widest italic">Operational Stream</h3>
-        <p className="text-slate-500 text-[10px] font-bold uppercase tracking-tighter mt-1">Focusing on active deployments</p>
+      {/* ONGOING DEPLOYMENTS */}
+      <div className="bg-[#0b0f1a] p-8 rounded-[2.5rem] border border-slate-800/50 shadow-2xl">
+        <div className="flex justify-between items-center mb-8 px-2">
+            <div>
+              <h3 className="text-white font-black text-lg uppercase tracking-widest italic">Operational Stream</h3>
+              <p className="text-slate-500 text-[10px] font-bold uppercase tracking-tighter mt-1 italic">Active Deployments Only</p>
+            </div>
+            <div className="flex items-center gap-2">
+               <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
+               <span className="text-blue-500 text-[10px] font-black uppercase tracking-tighter">Live Stream</span>
+            </div>
+        </div>
+        <div className="overflow-x-auto">
+          <table className="w-full text-left min-w-[900px]">
+            <thead className="bg-slate-900/50 border-b border-slate-800 text-slate-500 text-[10px] uppercase tracking-[0.2em] font-black">
+              <tr>
+                <th className="p-5">Project & Tags</th>
+                <th className="p-5">Client</th>
+                <th className="p-5">Status</th>
+                <th className="p-5">Commitment</th>
+                <th className="p-5">Price</th>
+                <th className="p-5 text-right">Action</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-slate-800 text-sm">
+              {projectsData.filter(p => p.status === "Ongoing").length === 0 ? (
+                <tr><td colSpan={6} className="p-10 text-center text-slate-600 font-black uppercase italic">No active projects detected</td></tr>
+              ) : projectsData
+                  .filter(p => p.status === "Ongoing")
+                  .map((project) => (
+                <tr key={project.id} className="hover:bg-slate-800/20 transition group">
+                  <td className="p-5">
+                    <div className="font-black text-white group-hover:text-blue-400 transition italic uppercase tracking-tight">{project.title}</div>
+                    <div className="text-[9px] text-slate-500 mt-1 uppercase font-black tracking-widest">{project.tags?.join(" • ")}</div>
+                  </td>
+                  <td className="p-5 text-slate-400 font-bold uppercase text-[12px]">{project.client}</td>
+                  <td className="p-5">
+                    <span className="px-3 py-1 rounded-lg text-[9px] font-black uppercase border bg-blue-500/5 text-blue-400 border-blue-500/20 italic">
+                      {project.status}
+                    </span>
+                  </td>
+                  <td className="p-5 font-mono text-[10px] leading-relaxed">
+                    <span className="text-slate-500 italic">S: {project.startDate}</span> <br/> 
+                    <span className="text-white font-bold tracking-tighter">T: {project.targetDate}</span>
+                  </td>
+                  <td className="p-4 text-emerald-400 font-black font-mono">{project.price}</td>
+                  <td className="p-5 text-right">
+                    <button onClick={() => router.push('/admin/projects')} className="p-2 hover:bg-slate-800 rounded-lg hover:text-white transition">
+                      <Icon icon="tabler:external-link" width="18" />
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
-      <div className="flex items-center gap-2">
-         <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
-         <span className="text-blue-500 text-[10px] font-black uppercase tracking-tighter">Ongoing Projects Only</span>
-      </div>
-  </div>
-  <div className="overflow-x-auto">
-    <table className="w-full text-left min-w-[900px]">
-      <thead className="bg-slate-900/50 border-b border-slate-800 text-slate-500 text-[10px] uppercase tracking-[0.2em] font-black">
-        <tr>
-          <th className="p-5">Project & Tags</th>
-          <th className="p-5">Client</th>
-          <th className="p-5">Status</th>
-          <th className="p-5">Commitment</th>
-          <th className="p-5">Price</th>
-          <th className="p-5 text-right">Action</th>
-        </tr>
-      </thead>
-      <tbody className="divide-y divide-slate-800 text-sm">
-        {/* මෙතනදී අපි 'Ongoing' ඒවා විතරක් filter කරලා map කරනවා */}
-        {projectsData.filter(p => p.status === "Ongoing").length === 0 ? (
-          <tr><td colSpan={6} className="p-10 text-center text-slate-600 font-bold uppercase italic">No active projects in stream.</td></tr>
-        ) : projectsData
-            .filter(p => p.status === "Ongoing")
-            .map((project) => (
-          <tr key={project.id} className="hover:bg-slate-800/20 transition group">
-            <td className="p-5">
-              <div className="font-bold text-white group-hover:text-blue-400 transition">{project.title}</div>
-              <div className="text-[9px] text-slate-500 mt-1 uppercase font-black tracking-widest">{project.tags?.join(" • ")}</div>
-            </td>
-            <td className="p-5 text-slate-400 font-bold">{project.client}</td>
-            <td className="p-5">
-              <span className="px-3 py-1 rounded-lg text-[9px] font-black uppercase border bg-blue-500/5 text-blue-400 border-blue-500/20">
-                {project.status}
-              </span>
-            </td>
-            <td className="p-5 font-mono text-[10px] leading-relaxed">
-              <span className="text-slate-500">S: {project.startDate}</span> <br/> 
-              <span className="text-white font-bold">T: {project.targetDate}</span>
-            </td>
-            <td className="p-4 text-emerald-400 font-black font-mono">{project.price}</td>
-            <td className="p-5 text-right">
-              <div className="flex justify-end gap-2 text-slate-500">
-                <button onClick={() => router.push('/admin/projects')} className="p-2 hover:bg-slate-800 rounded-lg hover:text-white transition"><Icon icon="tabler:external-link" width="18" /></button>
-              </div>
-            </td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
-  </div>
-</div>
-      
     </div>
   );
 }
