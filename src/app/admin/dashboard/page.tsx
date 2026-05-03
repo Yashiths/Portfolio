@@ -3,139 +3,238 @@ import React, { useState, useEffect } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
 import { db } from "@/lib/firebase";
-import { collection, onSnapshot } from "firebase/firestore";
+import { collection, onSnapshot, query, orderBy } from "firebase/firestore";
+import { Icon } from "@iconify/react";
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell, PieChart, Pie } from "recharts";
 
 export default function Dashboard() {
   const { user, loading } = useAuth();
   const router = useRouter();
-  
-  // Real-time states for stats
-  const [projectCount, setProjectCount] = useState(0);
-  const [messageCount, setMessageCount] = useState(0);
 
-  // Redirect if not logged in
+  // Live Data States
+  const [projectCount, setProjectCount] = useState(0);
+  const [totalRevenue, setTotalRevenue] = useState(0);
+  const [messageCount, setMessageCount] = useState(0);
+  const [projectsData, setProjectsData] = useState<any[]>([]);
+  const [statusData, setStatusData] = useState<any[]>([]);
+  const [barData, setBarData] = useState<any[]>([]);
+
+  // Authentication logic
   useEffect(() => {
-    if (!loading && !user) {
-      router.push("/admin/login");
-    }
+    if (!loading && !user) router.push("/admin/login");
   }, [user, loading, router]);
 
-  // Fetch real-time counts from Firestore
+  // Real-time Database listeners
   useEffect(() => {
     if (!user) return;
 
-    // Listen to Projects count
-    const unsubProjects = onSnapshot(collection(db, "projects"), (snap) => {
-      setProjectCount(snap.size);
+    // Listen to ALL projects for stats & project count
+    const unsubAll = onSnapshot(collection(db, "projects"), (snap) => {
+      setProjectCount(snap.size); // Total Project Count එක මෙතනින් ගන්නවා
+      
+      let completed = 0, ongoing = 0, revenue = 0;
+      snap.docs.forEach(doc => {
+        const data = doc.data();
+        revenue += (parseFloat(data.price?.replace(/[^\d.-]/g, '')) || 0);
+        if (data.status === "Completed") completed++;
+        else if (data.status === "Ongoing") ongoing++;
+      });
+
+      setTotalRevenue(revenue);
+      setStatusData([
+        { name: 'Completed', value: completed, color: '#10b981' },
+        { name: 'Ongoing', value: ongoing, color: '#3b82f6' },
+        { name: 'Pending', value: snap.size - (completed + ongoing), color: '#64748b' },
+      ]);
     });
 
-    // Listen to Messages count
+    // Latest Projects List
+    const qLatest = query(collection(db, "projects"), orderBy("startDate", "desc"));
+    const unsubLatest = onSnapshot(qLatest, (snap) => {
+      setProjectsData(snap.docs.slice(0, 5).map(d => ({ id: d.id, ...d.data() })));
+      
+      // Sample Bar Chart Data (මේක ඔයාට පසුව මාසික ආදායම අනුව හදන්න පුළුවන්)
+      const data = [
+        { name: 'Jan', sales: 30 }, { name: 'Feb', sales: 45 },
+        { name: 'Mar', sales: 28 }, { name: 'Apr', sales: 50 },
+        { name: 'May', sales: 35 }, { name: 'Jun', sales: 40 }
+      ];
+      setBarData(data);
+    });
+
     const unsubMessages = onSnapshot(collection(db, "messages"), (snap) => {
       setMessageCount(snap.size);
     });
 
     return () => {
-      unsubProjects();
+      unsubAll();
+      unsubLatest();
       unsubMessages();
     };
   }, [user]);
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-[#020617] flex items-center justify-center">
-        <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-emerald-500"></div>
-      </div>
-    );
-  }
-
+  if (loading) return <div className="p-10 text-emerald-500 animate-pulse font-black">SYNCING SYSTEMS...</div>;
   if (!user) return null;
 
   return (
-    <div className="space-y-8 animate-in fade-in duration-500">
-      {/* Header Section */}
-      <div className="flex justify-between items-center">
+    <div className="space-y-8 p-6 lg:p-10 text-white bg-[#020617] min-h-screen">
+      
+      {/* HEADER */}
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-white tracking-tight">Overview</h1>
-          <p className="text-slate-400 text-sm mt-1">Welcome back, {user.email?.split('@')[0]}</p>
+          <h1 className="text-3xl font-black tracking-tighter bg-gradient-to-r from-white to-slate-500 bg-clip-text text-transparent uppercase italic">Overview</h1>
+          <p className="text-slate-500 text-xs font-bold mt-1 tracking-widest uppercase flex items-center gap-2">
+            <span className="w-2 h-2 bg-emerald-500 rounded-full animate-ping"></span>
+            Real-time Performance Metrics
+          </p>
         </div>
         <button 
           onClick={() => router.push('/admin/projects')}
-          className="bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-bold px-6 py-3 rounded-xl shadow-lg shadow-emerald-500/20 transition-all active:scale-95"
+          className="bg-white text-black font-black px-6 py-3 rounded-2xl flex items-center gap-2 hover:bg-emerald-500 transition-all shadow-xl shadow-white/5 active:scale-95"
         >
-          + Add Project
+          <Icon icon="tabler:plus" width="22" /> NEW PROJECT
         </button>
       </div>
 
-      {/* Top Stats - Linked to Live Data */}
+      {/* STATS GRID with Colorful Elements */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {[
-          { label: "Total Projects", value: projectCount, sub: "Live from Firestore", color: "text-emerald-400" },
-          { label: "Tasks", value: "05", sub: "Pending tasks", color: "text-blue-400" },
-          { label: "Views", value: "128", sub: "Static data", color: "text-amber-400" },
-          { label: "Messages", value: messageCount, sub: "In your inbox", color: "text-rose-400" },
+          { label: "Total Projects", value: projectCount, sub: "Live Records", icon: "tabler:box-model-2", color: "text-emerald-400", bg: "bg-emerald-400/10" },
+          { label: "Est. Revenue", value: `LKR ${totalRevenue.toLocaleString()}`, sub: "Gross Pipeline", icon: "tabler:currency-dollar", color: "text-blue-400", bg: "bg-blue-400/10" },
+          { label: "Inbound Leads", value: messageCount, sub: "Unread Messages", icon: "tabler:mail-opened", color: "text-rose-400", bg: "bg-rose-400/10" },
+          { label: "System Health", value: "Online", sub: "Cloud Synced", icon: "tabler:shield-check", color: "text-amber-400", bg: "bg-amber-400/10" },
         ].map((stat, i) => (
-          <div key={i} className="bg-[#0b0f1a] p-6 rounded-2xl border border-slate-800 hover:border-slate-700 transition-all shadow-sm">
-            <p className="text-slate-500 text-xs font-bold uppercase tracking-widest">{stat.label}</p>
-            <p className="text-3xl font-bold text-white mt-2">{stat.value}</p>
-            <p className={`${stat.color} text-xs mt-1 font-medium`}>{stat.sub}</p>
+          <div key={i} className="bg-[#0b0f1a] p-6 rounded-[2.5rem] border border-slate-800/50 relative overflow-hidden group hover:border-slate-700 transition-all shadow-2xl">
+            <div className={`p-3 rounded-xl ${stat.bg} ${stat.color} w-fit mb-4 group-hover:scale-110 transition-transform`}>
+              <Icon icon={stat.icon} width="24" />
+            </div>
+            <p className="text-slate-500 text-[10px] font-black uppercase tracking-[0.2em]">{stat.label}</p>
+            <p className="text-2xl font-black mt-1 italic">{stat.value}</p>
+            <p className={`text-[10px] ${stat.color} mt-1 font-bold`}>{stat.sub}</p>
+            
+            {/* Soft Background Icon Decoration */}
+            <div className={`absolute -right-4 -bottom-4 ${stat.color} opacity-5 group-hover:opacity-10 transition-opacity`}>
+              <Icon icon={stat.icon} width="100" />
+            </div>
           </div>
         ))}
       </div>
 
-      {/* Main Grid Section */}
+      {/* CHARTS SECTION */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         
-        {/* Active Projects Table */}
-        <div className="lg:col-span-2 bg-[#0b0f1a] rounded-2xl border border-slate-800 overflow-hidden shadow-xl">
-          <div className="p-6 border-b border-slate-800 bg-slate-800/20">
-            <h3 className="text-lg font-bold text-white">Project Quick View</h3>
+        {/* Performance matrix */}
+        <div className="lg:col-span-2 bg-[#0b0f1a] p-8 rounded-[3rem] border border-slate-800/50 shadow-2xl">
+          <div className="flex justify-between items-center mb-8">
+            <h3 className="text-lg font-black italic tracking-tighter uppercase">Performance Matrix</h3>
+            <div className="flex gap-4">
+               <span className="flex items-center gap-1.5 text-[10px] text-slate-500 font-bold"><Icon icon="tabler:circle-filled" className="text-emerald-500"/> SALES</span>
+               <span className="flex items-center gap-1.5 text-[10px] text-slate-500 font-bold"><Icon icon="tabler:circle-filled" className="text-blue-500"/> TARGETS</span>
+            </div>
           </div>
-          <div className="p-4 overflow-x-auto">
-            <table className="w-full text-left">
-              <thead>
-                <tr className="text-slate-500 text-xs uppercase tracking-wider">
-                  <th className="p-4">Name</th>
-                  <th className="p-4">Status</th>
-                </tr>
-              </thead>
-              <tbody className="text-slate-300">
-                <tr className="border-t border-slate-800/50 hover:bg-slate-800/20 transition">
-                  <td className="p-4 font-medium italic text-slate-500 text-sm">Use "Projects" tab to manage detailed list</td>
-                  <td className="p-4">
-                    <span className="px-2 py-1 rounded-md text-[10px] font-bold uppercase bg-emerald-500/10 text-emerald-500">
-                      Operational
-                    </span>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+          <div className="h-80 w-full">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={barData}>
+                <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{fill: '#475569', fontSize: 11, fontWeight: 'bold'}}/>
+                <YAxis hide />
+                <Tooltip cursor={{fill: '#ffffff05'}} contentStyle={{backgroundColor: '#0b0f1a', borderRadius: '20px', border: '1px solid #ffffff10', fontSize: '12px'}}/>
+                <Bar dataKey="sales" radius={[10, 10, 0, 0]} barSize={30}>
+                  {barData.map((entry, index) => (
+                    <Cell key={index} fill={index % 2 === 0 ? '#10b981' : '#3b82f6'} />
+                  ))}
+                </Bar>
+              </BarChart>
+            </ResponsiveContainer>
           </div>
         </div>
 
-        {/* Right Sidebar Stats */}
-        <div className="space-y-6">
-          <div className="bg-[#0b0f1a] p-6 rounded-2xl border border-slate-800 shadow-sm">
-            <h3 className="text-white font-bold mb-4">System Status</h3>
-            <div className="flex items-center justify-between mb-2">
-               <span className="text-4xl font-bold text-white">100%</span>
-            </div>
-            <div className="w-full bg-slate-800 h-3 rounded-full overflow-hidden">
-              <div className="bg-gradient-to-r from-emerald-500 to-teal-400 h-full w-[100%]"></div>
-            </div>
-            <p className="text-xs text-slate-500 mt-4 font-medium uppercase tracking-tighter">Firebase & Next.js connected</p>
+        {/* Operational Status (Pie) */}
+        <div className="bg-[#0b0f1a] p-8 rounded-[3rem] border border-slate-800/50 flex flex-col justify-between shadow-2xl">
+          <h3 className="text-lg font-black italic tracking-tighter text-center uppercase">Workload Distribution</h3>
+          <div className="h-64">
+            <ResponsiveContainer width="100%" height="100%">
+              <PieChart>
+                <Pie data={statusData} innerRadius={65} outerRadius={85} paddingAngle={10} dataKey="value" stroke="none">
+                  {statusData.map((entry, index) => <Cell key={index} fill={entry.color} />)}
+                </Pie>
+                <Tooltip />
+              </PieChart>
+            </ResponsiveContainer>
           </div>
-
-          {/* Helper Card */}
-          <div className="bg-gradient-to-br from-emerald-600 to-teal-700 p-6 rounded-2xl shadow-lg relative overflow-hidden group">
-            <div className="relative z-10">
-              <h3 className="text-white font-bold text-lg leading-tight">Admin System Live</h3>
-              <p className="text-emerald-100 text-xs mt-2 opacity-80">You can now add projects and read messages in real-time.</p>
-            </div>
-            <div className="absolute -right-4 -bottom-4 text-white/10 text-9xl font-bold tracking-tighter italic">!</div>
+          <div className="grid grid-cols-3 gap-2 mt-4">
+            {statusData.map((item, i) => (
+              <div key={i} className="text-center">
+                <p className="text-[9px] font-black text-slate-500 uppercase">{item.name}</p>
+                <p className="text-lg font-black text-white">{item.value}</p>
+                 <div className="w-full h-1 mt-1 rounded-full" style={{ backgroundColor: item.color + '44' }}>
+                    <div className="h-full rounded-full" style={{ backgroundColor: item.color, width: '100%' }}></div>
+                 </div>
+              </div>
+            ))}
           </div>
         </div>
 
       </div>
+
+    // LATEST PROJECTS LIST (Dashboard එකේ පහළ Table එක)
+<div className="bg-[#0b0f1a] p-8 rounded-[2.5rem] border border-slate-800/50 shadow-2xl">
+  <div className="flex justify-between items-center mb-8 px-2">
+      <div>
+        <h3 className="text-white font-black text-lg uppercase tracking-widest italic">Operational Stream</h3>
+        <p className="text-slate-500 text-[10px] font-bold uppercase tracking-tighter mt-1">Focusing on active deployments</p>
+      </div>
+      <div className="flex items-center gap-2">
+         <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
+         <span className="text-blue-500 text-[10px] font-black uppercase tracking-tighter">Ongoing Projects Only</span>
+      </div>
+  </div>
+  <div className="overflow-x-auto">
+    <table className="w-full text-left min-w-[900px]">
+      <thead className="bg-slate-900/50 border-b border-slate-800 text-slate-500 text-[10px] uppercase tracking-[0.2em] font-black">
+        <tr>
+          <th className="p-5">Project & Tags</th>
+          <th className="p-5">Client</th>
+          <th className="p-5">Status</th>
+          <th className="p-5">Commitment</th>
+          <th className="p-5">Price</th>
+          <th className="p-5 text-right">Action</th>
+        </tr>
+      </thead>
+      <tbody className="divide-y divide-slate-800 text-sm">
+        {/* මෙතනදී අපි 'Ongoing' ඒවා විතරක් filter කරලා map කරනවා */}
+        {projectsData.filter(p => p.status === "Ongoing").length === 0 ? (
+          <tr><td colSpan={6} className="p-10 text-center text-slate-600 font-bold uppercase italic">No active projects in stream.</td></tr>
+        ) : projectsData
+            .filter(p => p.status === "Ongoing")
+            .map((project) => (
+          <tr key={project.id} className="hover:bg-slate-800/20 transition group">
+            <td className="p-5">
+              <div className="font-bold text-white group-hover:text-blue-400 transition">{project.title}</div>
+              <div className="text-[9px] text-slate-500 mt-1 uppercase font-black tracking-widest">{project.tags?.join(" • ")}</div>
+            </td>
+            <td className="p-5 text-slate-400 font-bold">{project.client}</td>
+            <td className="p-5">
+              <span className="px-3 py-1 rounded-lg text-[9px] font-black uppercase border bg-blue-500/5 text-blue-400 border-blue-500/20">
+                {project.status}
+              </span>
+            </td>
+            <td className="p-5 font-mono text-[10px] leading-relaxed">
+              <span className="text-slate-500">S: {project.startDate}</span> <br/> 
+              <span className="text-white font-bold">T: {project.targetDate}</span>
+            </td>
+            <td className="p-4 text-emerald-400 font-black font-mono">{project.price}</td>
+            <td className="p-5 text-right">
+              <div className="flex justify-end gap-2 text-slate-500">
+                <button onClick={() => router.push('/admin/projects')} className="p-2 hover:bg-slate-800 rounded-lg hover:text-white transition"><Icon icon="tabler:external-link" width="18" /></button>
+              </div>
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+</div>
+      
     </div>
   );
 }
