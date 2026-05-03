@@ -5,7 +5,7 @@ import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc, query, orderBy 
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { Icon } from "@iconify/react";
 
-// 1. Interface updated with youtubeUrl
+// Project interface definition
 interface Project {
   id: string;
   title: string;
@@ -17,7 +17,7 @@ interface Project {
   actionPlan: string;
   price: string;
   github: string;
-  youtubeUrl: string; // New Field
+  youtubeUrl: string;
   imageUrl: string;
   description: string;
   tags: string[];
@@ -31,14 +31,84 @@ export default function ProjectsPage() {
   const [uploading, setUploading] = useState(false);
   const [activeFilter, setActiveFilter] = useState("All");
 
-  // 2. Form Data updated with youtubeUrl
+  // Form state management
   const [formData, setFormData] = useState({
     title: "", client: "", status: "Ongoing", startDate: "", targetDate: "", 
     deliveryDate: "", actionPlan: "", price: "", github: "", 
-    youtubeUrl: "", // New Field
-    imageUrl: "", description: "", tagsString: ""
+    youtubeUrl: "", imageUrl: "", description: "", tagsString: ""
   });
 
+  /**
+   * Compresses image using HTML5 Canvas to reduce file size before upload
+   * @param file Original file from input
+   * @returns Compressed Blob object
+   */
+  const compressImage = (file: File): Promise<Blob> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = (event) => {
+        const img = new window.Image();
+        img.src = event.target?.result as string;
+        img.onload = () => {
+          const canvas = document.createElement("canvas");
+          const MAX_WIDTH = 1200; // Define maximum width for the image
+          let width = img.width;
+          let height = img.height;
+
+          // Maintain aspect ratio while resizing
+          if (width > MAX_WIDTH) {
+            height *= MAX_WIDTH / width;
+            width = MAX_WIDTH;
+          }
+
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext("2d");
+          ctx?.drawImage(img, 0, 0, width, height);
+
+          // Export as JPEG with 70% quality
+          canvas.toBlob((blob) => {
+            if (blob) resolve(blob);
+            else reject(new Error("Image compression failed"));
+          }, "image/jpeg", 0.7); 
+        };
+      };
+      reader.onerror = (error) => reject(error);
+    });
+  };
+
+  /**
+   * Handles image selection, compression, and Firebase Storage upload
+   */
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setUploading(true);
+    try {
+      // 1. Compress image client-side to save bandwidth and speed up upload
+      const compressedBlob = await compressImage(file);
+      
+      // 2. Upload the compressed blob to Firebase Storage
+      const storageRef = ref(storage, `projects/${Date.now()}_${file.name}`);
+      await uploadBytes(storageRef, compressedBlob);
+      
+      // 3. Get and store the public download URL
+      const url = await getDownloadURL(storageRef);
+      setFormData({ ...formData, imageUrl: url });
+      
+    } catch (error) {
+      console.error("Upload error:", error);
+      alert("Image upload failed. Please try again.");
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  /**
+   * Fetches all projects from Firestore ordered by start date
+   */
   const fetchProjects = async () => {
     setLoading(true);
     try {
@@ -46,44 +116,49 @@ export default function ProjectsPage() {
       const querySnapshot = await getDocs(q);
       const data = querySnapshot.docs.map(d => ({ id: d.id, ...d.data() })) as Project[];
       setProjects(data);
-    } catch (error) { console.error(error); }
+    } catch (error) { 
+      console.error("Firestore fetch error:", error); 
+    }
     setLoading(false);
   };
 
-  useEffect(() => { fetchProjects(); }, []);
+  useEffect(() => { 
+    fetchProjects(); 
+  }, []);
 
+  // Filter projects based on active status tab
   const filteredProjects = projects.filter(p => 
     activeFilter === "All" ? true : p.status === activeFilter
   );
 
-  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    setUploading(true);
-    try {
-      const storageRef = ref(storage, `projects/${file.name}`);
-      await uploadBytes(storageRef, file);
-      const url = await getDownloadURL(storageRef);
-      setFormData({ ...formData, imageUrl: url });
-    } catch (error) { alert("Image upload failed"); }
-    setUploading(false);
-  };
-
+  /**
+   * Handles form submission for both creating and updating projects
+   */
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    // Transform comma-separated string back to array of tags
     const finalData = { 
         ...formData, 
         tags: formData.tagsString.split(",").map(tag => tag.trim()) 
     };
     delete (finalData as any).tagsString;
+
     try {
-      if (editId) { await updateDoc(doc(db, "projects", editId), finalData); }
-      else { await addDoc(collection(db, "projects"), finalData); }
+      if (editId) { 
+        await updateDoc(doc(db, "projects", editId), finalData); 
+      } else { 
+        await addDoc(collection(db, "projects"), finalData); 
+      }
       closeModal();
       fetchProjects();
-    } catch (error) { alert("Error saving project"); }
+    } catch (error) { 
+      alert("Error saving project data to Firestore."); 
+    }
   };
 
+  /**
+   * Populates form with existing project data for editing
+   */
   const handleEdit = (project: Project) => {
     setEditId(project.id);
     setFormData({ 
@@ -94,6 +169,9 @@ export default function ProjectsPage() {
     setShowModal(true);
   };
 
+  /**
+   * Resets form and closes the modal
+   */
   const closeModal = () => {
     setShowModal(false);
     setEditId(null);
@@ -105,15 +183,15 @@ export default function ProjectsPage() {
   };
 
   return (
-    <div className="p-6 space-y-6">
-      {/* HEADER SECTION */}
+    <div className="p-6 space-y-6 text-white">
+      {/* Header Section */}
       <div className="flex justify-between items-end">
         <div>
-          <h1 className="text-3xl font-black text-white tracking-tighter uppercase italic">
+          <h1 className="text-3xl font-black tracking-tighter uppercase italic">
             Project Control Center
           </h1>
           <p className="text-slate-500 text-[10px] font-black uppercase tracking-[0.2em] mt-1">
-             Monitoring {filteredProjects.length} {activeFilter === "All" ? "Total" : activeFilter} Projects
+              Monitoring {filteredProjects.length} {activeFilter === "All" ? "Total" : activeFilter} Projects
           </p>
         </div>
         <button onClick={() => setShowModal(true)} className="bg-white text-black px-6 py-3 rounded-2xl font-black uppercase italic text-xs flex items-center gap-2 transition hover:bg-emerald-500 active:scale-95 shadow-lg shadow-white/5">
@@ -121,7 +199,7 @@ export default function ProjectsPage() {
         </button>
       </div>
 
-      {/* Filter Tabs */}
+      {/* Status Filter Tabs */}
       <div className="flex gap-2 p-1 bg-slate-900/50 border border-slate-800 rounded-xl w-fit">
         {["All", "Ongoing", "Completed", "Pending", "On Hold"].map((status) => (
           <button
@@ -138,7 +216,7 @@ export default function ProjectsPage() {
         ))}
       </div>
 
-      {/* Projects Table */}
+      {/* Projects Data Table */}
       <div className="bg-[#0b0f1a] border border-slate-800 rounded-[2rem] overflow-hidden shadow-2xl">
         <div className="overflow-x-auto">
           <table className="w-full text-left min-w-[1100px]">
@@ -182,7 +260,6 @@ export default function ProjectsPage() {
                     <td className="p-5 text-emerald-400 font-black font-mono">{project.price}</td>
                     <td className="p-5 text-right">
                       <div className="flex justify-end gap-2 text-slate-500">
-                        {/* YouTube Link Icon */}
                         {project.youtubeUrl && (
                           <a href={project.youtubeUrl} target="_blank" className="p-2 hover:bg-slate-800 rounded-lg hover:text-red-500 transition">
                             <Icon icon="tabler:brand-youtube" width="18" />
@@ -195,14 +272,14 @@ export default function ProjectsPage() {
                   </tr>
                 ))
               ) : (
-                <tr><td colSpan={7} className="p-20 text-center text-slate-600 font-black uppercase italic tracking-widest">No {activeFilter !== "All" ? activeFilter : ""} projects found.</td></tr>
+                <tr><td colSpan={7} className="p-20 text-center text-slate-600 font-black uppercase italic tracking-widest">No projects found.</td></tr>
               )}
             </tbody>
           </table>
         </div>
       </div>
 
-      {/* Modal */}
+      {/* Project Modal (Add/Edit) */}
       {showModal && (
         <div className="fixed inset-0 bg-black/90 backdrop-blur-md flex items-center justify-center p-4 z-50">
           <div className="bg-[#0b0f1a] border border-slate-800 p-8 rounded-[2.5rem] w-full max-w-2xl shadow-2xl overflow-y-auto max-h-[90vh]">
@@ -212,8 +289,6 @@ export default function ProjectsPage() {
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <input type="text" placeholder="Project Name" required className="bg-slate-900 border border-slate-800 p-3.5 rounded-xl text-white outline-none focus:border-emerald-500 transition font-bold" value={formData.title} onChange={(e) => setFormData({...formData, title: e.target.value})} />
-                
-                {/* 3. YouTube URL Field added here */}
                 <input type="text" placeholder="YouTube Demo URL (Optional)" className="bg-slate-900 border border-slate-800 p-3.5 rounded-xl text-white outline-none focus:border-red-500 transition font-bold" value={formData.youtubeUrl} onChange={(e) => setFormData({...formData, youtubeUrl: e.target.value})} />
               </div>
               

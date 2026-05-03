@@ -3,10 +3,11 @@ import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { EffectCoverflow, Pagination, Navigation } from "swiper/modules";
+import { Icon } from "@iconify/react"; // Icons පාවිච්චියට
 
 // Firebase imports
 import { db } from "@/lib/firebase";
-import { collection, query, orderBy, limit, onSnapshot } from "firebase/firestore";
+import { collection, query, onSnapshot, where } from "firebase/firestore";
 
 // Swiper styles
 import "swiper/css";
@@ -18,33 +19,39 @@ const ProjectCarousel = () => {
   const [projects, setProjects] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // Fetch the latest 6 projects from Firestore
   useEffect(() => {
+    // Featured projects විතරක් filter කරලා ගන්නවා
     const q = query(
-      collection(db, "projects"), 
-      orderBy("createdAt", "desc"), 
-      limit(6)
+      collection(db, "projects"),
+      where("status", "==", "Completed")
     );
     
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
-      const projectsArray: any[] = [];
+      const allProjects: any[] = [];
       querySnapshot.forEach((doc) => {
-        projectsArray.push({ id: doc.id, ...doc.data() });
+        allProjects.push({ id: doc.id, ...doc.data() });
       });
-      setProjects(projectsArray);
+
+      // isFeatured true ඒවා විතරක් පෙරා ගැනීම
+      const filtered = allProjects
+        .filter(p => p.isFeatured === true)
+        .sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0))
+        .slice(0, 6);
+
+      setProjects(filtered);
       setLoading(false);
     });
 
     return () => unsubscribe();
   }, []);
 
-  if (loading) return null;
+  if (loading || projects.length === 0) return null;
 
   return (
     <section className="py-24 bg-darkmode overflow-hidden" id="projects">
       <div className="container mx-auto px-4 mb-12 text-center">
         <h2 className="text-white text-4xl md:text-5xl font-bold leading-tight">
-          Latest <span className="text-primary">Projects</span>
+          Featured <span className="text-primary">Showcase</span>
         </h2>
       </div>
 
@@ -75,16 +82,37 @@ const ProjectCarousel = () => {
         >
           {projects.map((project) => (
             <SwiperSlide key={project.id} className="!w-[300px] md:!w-[380px]">
-              <div className="bg-[#0b1120] border border-white/5 rounded-3xl p-5 shadow-2xl transition-all duration-500 group hover:border-primary/20 backdrop-blur-sm h-full">
+              <div className="bg-[#0b1120] border border-white/5 rounded-3xl p-5 shadow-2xl transition-all duration-500 group hover:border-primary/20 backdrop-blur-sm h-full flex flex-col">
                 
-                <div className="relative w-full h-52 mb-5 rounded-2xl overflow-hidden bg-black/30">
+                <div className="relative w-full h-52 mb-5 rounded-2xl overflow-hidden bg-black/30 group/img">
                   <Image
                     src={project.imageUrl || "/images/projects/placeholder.png"}
                     alt={project.title}
                     fill
-                    className="object-cover transition-transform duration-500 group-hover:scale-105"
+                    className="object-cover transition-transform duration-500 group-hover/img:scale-110 group-hover/img:blur-[2px]"
                     sizes="(max-width: 768px) 100vw, 380px"
                   />
+
+                  {/* Hover Buttons - ඔයාගේ Original Buttons වල Font style එකමයි (font-bold) */}
+                  <div className="absolute inset-0 bg-black/60 flex flex-col items-center justify-center gap-3 opacity-0 group-hover/img:opacity-100 transition-opacity duration-300 z-20">
+                    <a 
+                      href={project.github || "#"} 
+                      target="_blank" 
+                      className="flex items-center gap-2 bg-white text-black px-6 py-2 rounded-full font-bold text-xs hover:scale-105 transition-transform"
+                    >
+                      <Icon icon="tabler:brand-github" width="16" /> GitHub
+                    </a>
+                    
+                    {project.youtubeUrl && (
+                      <a 
+                        href={project.youtubeUrl} 
+                        target="_blank" 
+                        className="flex items-center gap-2 bg-[#ff0000] text-white px-6 py-2 rounded-full font-bold text-xs hover:scale-105 transition-transform"
+                      >
+                        <Icon icon="tabler:brand-youtube" width="16" /> Demo
+                      </a>
+                    )}
+                  </div>
                 </div>
 
                 <h3 className="text-white text-xl font-semibold mb-3 tracking-tight">
@@ -101,14 +129,6 @@ const ProjectCarousel = () => {
                     </span>
                   ))}
                 </div>
-
-                <a 
-                  href={project.github || "#"} 
-                  target="_blank" 
-                  className="block w-full py-3.5 bg-primary text-black text-center font-bold rounded-xl hover:bg-white transition-all duration-300 shadow-lg shadow-primary/10"
-                >
-                  Explore Project
-                </a>
               </div>
             </SwiperSlide>
           ))}

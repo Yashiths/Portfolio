@@ -46,13 +46,13 @@ const Hero = () => {
 
             <div className="flex items-center md:justify-start justify-center gap-6">
               <Link
-                href="#projects"
+                href="/projects"
                 className="bg-primary border border-primary rounded-lg text-18 font-semibold hover:bg-transparent hover:text-primary text-darkmode py-3 px-8 transition-all duration-300 shadow-lg shadow-primary/20"
               >
                 View My Work
               </Link>
               <Link
-                href="#contact"
+                href="/contact"
                 className="bg-transparent border border-primary rounded-lg text-18 font-semibold hover:bg-primary hover:text-darkmode text-primary py-3 px-8 transition-all duration-300"
               >
                 Let's Talk

@@ -9,11 +9,10 @@ export default function ManageProjects() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // මෙතනදී අපි 'Completed' status එක තියෙන ඒවා විතරක් Filter කරලා ගන්නවා
+
     const q = query(
       collection(db, "projects"), 
-      where("status", "==", "Completed"), // Completed ප්‍රොජෙක්ට් විතරයි ගන්නේ
-      orderBy("startDate", "desc")
+      where("status", "==", "Completed"), 
     );
 
     const unsub = onSnapshot(q, (snap) => {
