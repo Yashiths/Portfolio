@@ -3,6 +3,8 @@ import React, { useEffect } from "react";
 import Sidebar from "./Sidebar"; 
 import { useAuth } from "../../context/AuthContext";
 import { useRouter, usePathname } from "next/navigation";
+// Head component එක පාවිච්චි කරන එක තමයි නිවැරදි ක්‍රමය
+import Head from "next/head"; 
 
 export default function AdminLayout({
   children,
@@ -13,11 +15,9 @@ export default function AdminLayout({
   const router = useRouter();
   const pathname = usePathname();
 
-  // Check if the current page is the login page
   const isLoginPage = pathname === "/admin/login";
 
   useEffect(() => {
-    // Only redirect if not on login page and no user is found
     if (!loading && !user && !isLoginPage) {
       router.replace("/admin/login");
     }
@@ -31,28 +31,41 @@ export default function AdminLayout({
     );
   }
 
-  // If it's the login page, render only the children (the login form) without the sidebar
   if (isLoginPage) {
-    return <div className="min-h-screen bg-[#020617]">{children}</div>;
+    return (
+      <>
+        <title>Admin Login | Yashith Sasmitha</title>
+        <div className="min-h-screen bg-[#020617]">{children}</div>
+      </>
+    );
   }
 
-  // If not logged in and not on login page, show nothing during redirect
   if (!user) return null;
 
   return (
     <div className="flex min-h-screen bg-[#020617] text-slate-200">
-      {/* Sidebar is only shown for authenticated dashboard routes */}
+    
+      <title>Admin Console | Yashith Sasmitha</title>
+      <link rel="icon" href="/images/logo/yslogo.png" />
+      
       <Sidebar />
 
       <main className="flex-1 flex flex-col h-screen overflow-hidden">
         <header className="bg-[#0b0f1a]/80 backdrop-blur-md border-b border-slate-800 p-4 flex justify-between items-center">
-          <h2 className="text-sm font-bold text-slate-400 uppercase tracking-[0.2em]">Dashboard</h2>
+          <div>
+            <h2 className="text-[10px] font-black text-emerald-500 uppercase tracking-[0.3em] mb-0.5">System Secure</h2>
+            <h2 className="text-sm font-black text-white uppercase italic tracking-wider">Control Center</h2>
+          </div>
+          
           <div className="flex items-center gap-4">
             <div className="text-right hidden sm:block">
-              <p className="text-sm font-medium text-slate-200">Yashith Sasmitha</p>
-              <p className="text-xs text-emerald-500 font-bold uppercase tracking-tighter">Super Admin</p>
+              <p className="text-sm font-black text-white uppercase italic leading-none">Yashith Sasmitha</p>
+              <p className="text-[9px] text-emerald-500 font-black uppercase tracking-widest mt-1 text-right">Super Admin</p>
             </div>
-            <div className="w-10 h-10 bg-gradient-to-tr from-emerald-500 to-teal-400 rounded-full border-2 border-slate-800 shadow-lg"></div>
+
+            <div className="w-10 h-10 bg-[#0b0f1a] rounded-xl border border-white/10 flex items-center justify-center overflow-hidden shadow-lg shadow-emerald-500/5">
+               <img src="/favicon.ico" alt="Admin" className="w-6 h-6 object-contain" />
+            </div>
           </div>
         </header>
 

@@ -1,50 +1,52 @@
-import { useState, useEffect } from "react";
+"use client";
+import React, { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 import Logo from "@/components/Layout/Header/Logo";
-import { CryptoData } from "@/app/(site)/api/data"; // Adjust import as necessary
+import { CryptoData } from "@/app/(site)/api/data";
 
+// Interface එකේ price එක string හරි number හරි වෙන්න පුළුවන් විදියට හැදුවා
 interface Crypto {
   name: string;
-  price: number;
+  price: string | number; 
 }
 
 const BuyCrypto = () => {
   const [loading, setLoading] = useState(false);
   const [cryptos, setCryptos] = useState<Crypto[]>([]);
-  const [formData, setFormData] = useState<{
-    name: string;
-    price: number;
-    amount: string;
-    paymentMethod: string;
-  }>({
+  const [formData, setFormData] = useState({
     name: "",
-    price: 0,
+    price: 0, // මෙතන number එකක් විදියට තියාගමු calculation ලේසි වෙන්න
     amount: "",
     paymentMethod: "creditCard",
   });
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   useEffect(() => {
-    setCryptos(CryptoData);
-    if (CryptoData.length > 0) {
+    // CryptoData එක direct සෙට් නොකර, price එක number එකකට convert කරලා සෙට් කරමු
+    const formattedData = CryptoData.map((item: any) => ({
+      ...item,
+      price: typeof item.price === "string" ? parseFloat(item.price.replace(/[^\d.-]/g, '')) : item.price
+    }));
+
+    setCryptos(formattedData);
+
+    if (formattedData.length > 0) {
       setFormData((prevData) => ({
         ...prevData,
-        name: CryptoData[0].name,
-        price: CryptoData[0].price,
+        name: formattedData[0].name,
+        price: formattedData[0].price,
       }));
     }
   }, []);
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>
-  ) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     if (name === "amount") {
       setFormData((prevData) => ({ ...prevData, amount: value }));
     }
   };
 
-  const handleDropdownSelect = (crypto: Crypto) => {
+  const handleDropdownSelect = (crypto: any) => {
     setFormData((prevData) => ({
       ...prevData,
       name: crypto.name,
@@ -53,6 +55,7 @@ const BuyCrypto = () => {
     setIsDropdownOpen(false);
   };
 
+  // Calculation එකේදී parseFloat පාවිච්චි කරලා error එක නැති කළා
   const totalCost = formData.amount
     ? (formData.price * parseFloat(formData.amount)).toFixed(2)
     : "0.00";
@@ -81,17 +84,17 @@ const BuyCrypto = () => {
         <div className="mb-4 relative">
           <div
             onClick={() => setIsDropdownOpen((prev) => !prev)}
-            className="cursor-pointer text-white bg-transparent border border-dark_border border-opacity-60 rounded-md px-3 py-2 text-start"
+            className="cursor-pointer text-white bg-transparent border border-white/10 rounded-md px-3 py-2 text-start"
           >
-            {formData.name}
+            {formData.name || "Select Crypto"}
           </div>
           {isDropdownOpen && (
-            <div className="absolute z-10 bg-dark border border-dark_border border-opacity-60 mt-1 rounded-md w-full">
+            <div className="absolute z-10 bg-[#0b1120] border border-white/10 mt-1 rounded-md w-full max-h-60 overflow-y-auto">
               {cryptos.map((crypto) => (
                 <div
                   key={crypto.name}
                   onClick={() => handleDropdownSelect(crypto)}
-                  className="px-3 bg-dark_grey text-white hover:text-darkmode py-2 hover:bg-primary cursor-pointer"
+                  className="px-3 text-white hover:text-black py-2 hover:bg-primary cursor-pointer transition-colors"
                 >
                   {crypto.name}
                 </div>
@@ -99,17 +102,19 @@ const BuyCrypto = () => {
             </div>
           )}
         </div>
+        
         <div className="mb-4">
           <input
             id="crypto-price"
             type="text"
             name="price"
-            className="text-white bg-transparent border border-dark_border border-opacity-60 rounded-md px-3 py-2 w-full focus:border-primary focus-visible:outline-0"
-            value={`$${formData.price.toLocaleString()}`}
+            className="text-white bg-transparent border border-white/10 rounded-md px-3 py-2 w-full focus:border-primary outline-none disabled:opacity-50"
+            value={`$${Number(formData.price).toLocaleString()}`}
             disabled
             required
           />
         </div>
+
         <div className="mb-4">
           <input
             id="amount"
@@ -119,16 +124,23 @@ const BuyCrypto = () => {
             value={formData.amount}
             onChange={handleChange}
             min="0"
+            step="any"
             required
-            className="text-white bg-transparent border border-dark_border border-opacity-60 rounded-md px-3 py-2 w-full focus:border-primary focus-visible:outline-0"
+            className="text-white bg-transparent border border-white/10 rounded-md px-3 py-2 w-full focus:border-primary outline-none"
           />
         </div>
-        <div className="flex justify-between mb-4 text-white">
+
+        <div className="flex justify-between mb-4 text-white font-bold uppercase italic text-xs tracking-widest">
           <p>Total Cost: </p>
-          <p>${totalCost}</p>
+          <p className="text-primary">${totalCost}</p>
         </div>
-        <button className="text-darkmode font-medium text-18 bg-primary w-full border border-primary rounded-lg py-3 hover:text-primary hover:bg-transparent">
-          Buy
+
+        <button 
+          disabled={loading}
+          type="submit"
+          className="text-black font-black text-xs uppercase italic bg-primary w-full border border-primary rounded-lg py-4 hover:bg-transparent hover:text-primary transition-all disabled:opacity-50"
+        >
+          {loading ? "Processing..." : "Confirm Purchase"}
         </button>
       </form>
     </div>
