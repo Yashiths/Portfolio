@@ -68,7 +68,7 @@ const Hero = () => {
               {/* ලස්සන Glow එකක් image එක පිටිපස්සෙන් */}
               <div className="absolute inset-0 bg-primary/10 blur-[120px] rounded-full"></div>
               <Image
-                src={`${getImagePrefix()}images/hero/banner-image.png`}
+                src={`/images/hero/banner-image.png`}
                 alt="Yashith Sasmitha - Portfolio"
                 width={800}
                 height={800}

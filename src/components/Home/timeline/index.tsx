@@ -66,14 +66,14 @@ const SkillsSection = () => {
                     <p className="text-sm text-muted opacity-60">{skillsData[0].text}</p>
                   </div>
                   <div className="bg-light_grey/20 p-4 rounded-full border border-white/5">
-                    <Image src={`${getImagePrefix()}${skillsData[0].icon}`} alt={skillsData[0].title} width={40} height={40} />
+                    <Image src={`/${skillsData[0].icon}`} alt={skillsData[0].title} width={40} height={40} />
                   </div>
                 </div>
 
                 {/* Skill 2 - Top Right */}
                 <div className="absolute top-0 right-0 w-80 flex items-center gap-4 text-left pointer-events-auto">
                   <div className="bg-light_grey/20 p-4 rounded-full border border-white/5">
-                    <Image src={`${getImagePrefix()}${skillsData[1].icon}`} alt={skillsData[1].title} width={40} height={40} />
+                    <Image src={`/${skillsData[1].icon}`} alt={skillsData[1].title} width={40} height={40} />
                   </div>
                   <div>
                     <h5 className="text-muted text-2xl font-medium">{skillsData[1].title}</h5>
@@ -88,14 +88,14 @@ const SkillsSection = () => {
                     <p className="text-sm text-muted opacity-60">{skillsData[2].text}</p>
                   </div>
                   <div className="bg-light_grey/20 p-4 rounded-full border border-white/5">
-                    <Image src={`${getImagePrefix()}${skillsData[2].icon}`} alt={skillsData[2].title} width={40} height={40} />
+                    <Image src={`/${skillsData[2].icon}`} alt={skillsData[2].title} width={40} height={40} />
                   </div>
                 </div>
 
                 {/* Skill 4 - Bottom Right */}
                 <div className="absolute bottom-10 right-0 w-80 flex items-center gap-4 text-left pointer-events-auto">
                   <div className="bg-light_grey/20 p-4 rounded-full border border-white/5">
-                    <Image src={`${getImagePrefix()}${skillsData[3].icon}`} alt={skillsData[3].title} width={40} height={40} />
+                    <Image src={`/${skillsData[3].icon}`} alt={skillsData[3].title} width={40} height={40} />
                   </div>
                   <div>
                     <h5 className="text-muted text-2xl font-medium">{skillsData[3].title}</h5>
@@ -110,7 +110,7 @@ const SkillsSection = () => {
               {skillsData.map((item, index) => (
                 <div key={index} className="flex items-center gap-6 p-4 bg-light_grey/10 rounded-xl">
                   <div className="bg-primary/20 p-4 rounded-full">
-                    <Image src={`${getImagePrefix()}${item.icon}`} alt={item.title} width={35} height={35} />
+                    <Image src={`/${item.icon}`} alt={item.title} width={35} height={35} />
                   </div>
                   <div className="text-start">
                     <h4 className="text-white text-xl font-medium">{item.title}</h4>
