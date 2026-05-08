@@ -6,7 +6,7 @@ import axios from "axios";
 import Loader from "@/components/Common/Loader";
 import Link from "next/link";
 import Image from "next/image";
-import { getImagePrefix } from "@/utils/utils";
+//import { getImagePrefix } from "@/utils/utils";
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState("");

@@ -9,7 +9,7 @@ import axiosImg from "/public/images/documentation/axios.svg";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import { useState } from "react";
 import { DocNavigation } from "./DocNavigation";
-import { getImagePrefix } from "@/utils/utils";
+//import { getImagePrefix } from "@/utils/utils";
 
 export const Introduction = () => {
   const [docNavbarOpen, setDocNavbarOpen] = useState(false);

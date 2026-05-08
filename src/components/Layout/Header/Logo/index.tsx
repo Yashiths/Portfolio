@@ -1,4 +1,4 @@
-import { getImagePrefix } from "@/utils/utils";
+//import { getImagePrefix } from "@/utils/utils";
 import Image from "next/image";
 import Link from "next/link";
 

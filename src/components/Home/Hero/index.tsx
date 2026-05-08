@@ -3,7 +3,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import CardSlider from "./slider";
-import { getImagePrefix } from "@/utils/utils";
+//import { getImagePrefix } from "@/utils/utils";
 
 const Hero = () => {
   const leftAnimation = {

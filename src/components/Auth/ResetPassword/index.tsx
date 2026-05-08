@@ -6,7 +6,7 @@ import toast from "react-hot-toast";
 import Loader from "@/components/Common/Loader";
 import Link from "next/link";
 import Image from "next/image";
-import { getImagePrefix } from "@/utils/utils";
+//import { getImagePrefix } from "@/utils/utils";
 
 const ResetPassword = ({ token }: { token: string }) => {
   const [data, setData] = useState({
