@@ -65,7 +65,6 @@ const Hero = () => {
             className="lg:col-span-6 col-span-12 lg:block hidden"
           >
             <div className="ml-10 relative">
-              {/* ලස්සන Glow එකක් image එක පිටිපස්සෙන් */}
               <div className="absolute inset-0 bg-primary/10 blur-[120px] rounded-full"></div>
               <Image
                 src={`/images/hero/banner-image.png`}

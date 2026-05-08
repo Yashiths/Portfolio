@@ -1,5 +1,5 @@
 export const footerlabels: { label: string; href: string }[] = [
-  { label: "Home", href: "#" }, // herf -> href ලෙස වෙනස් කළා
+  { label: "Home", href: "#" },
   { label: "Services", href: "#services" },
   { label: "Projects", href: "#projects" },
   { label: "Stack", href: "#stack" },
@@ -20,7 +20,7 @@ export const pricedeta: {
   {
     title: "E-commerce App",
     short: "Full Stack",
-    icon: "/images/icons/application.png",
+    icon: "/icons/application.png",
     background: "bg-primary bg-opacity-20",
     price: "React & Firebase",
     mark: "Live Project",
@@ -31,7 +31,7 @@ export const pricedeta: {
   {
     title: "Modern Web Page",
     short: "UI/UX Design",
-    icon: "/images/icons/website.png",
+    icon: "/icons/website.png",
     background: "bg-light_grey",
     price: "Next.js & Tailwind",
     mark: "Responsive",
@@ -42,7 +42,7 @@ export const pricedeta: {
   {
     title: "Portfolio Site",
     short: "Personal",
-    icon: "/images/icons/portfolio.png",
+    icon: "/icons/portfolio.png",
     background: "bg-primary bg-opacity-20",
     price: "Next.js & Framer",
     mark: "Active",
@@ -53,7 +53,7 @@ export const pricedeta: {
   {
     title: "Inventory System",
     short: "Management",
-    icon: "/images/icons/code.png",
+    icon: "/icons/code.png",
     background: "bg-light_grey",
     price: "React.js",
     mark: "Completed",
@@ -64,7 +64,7 @@ export const pricedeta: {
   {
     title: "Graphic ",
     short: "Design",
-    icon: "/images/icons/graphicdesign.png",
+    icon: "/icons/graphicdesign.png",
     background: "bg-light_grey",
     price: "Adobe",
     mark: "Completed",
