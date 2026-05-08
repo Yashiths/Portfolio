@@ -38,7 +38,7 @@
     "react-icon-cloud": "^4.1.7",
     "react-redux": "^9.2.0",
     "react-responsive": "^10.0.1",
-    "react-slick": "^0.30.2",
+    "react-slick": "^0.30.3",
     "recharts": "^3.8.1",
     "remark": "^15.0.1",
     "remark-html": "^16.0.1",
