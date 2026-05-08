@@ -20,7 +20,7 @@ export const pricedeta: {
   {
     title: "E-commerce App",
     short: "Full Stack",
-    icon: "/icons/application.png",
+    icon: "/images/icons/application.png",
     background: "bg-primary bg-opacity-20",
     price: "React & Firebase",
     mark: "Live Project",
@@ -31,7 +31,7 @@ export const pricedeta: {
   {
     title: "Modern Web Page",
     short: "UI/UX Design",
-    icon: "/icons/website.png",
+    icon: "/images/icons/website.png",
     background: "bg-light_grey",
     price: "Next.js & Tailwind",
     mark: "Responsive",
@@ -42,7 +42,7 @@ export const pricedeta: {
   {
     title: "Portfolio Site",
     short: "Personal",
-    icon: "/icons/portfolio.png",
+    icon: "/images/icons/portfolio.png",
     background: "bg-primary bg-opacity-20",
     price: "Next.js & Framer",
     mark: "Active",
@@ -53,7 +53,7 @@ export const pricedeta: {
   {
     title: "Inventory System",
     short: "Management",
-    icon: "/icons/code.png",
+    icon: "/images/icons/code.png",
     background: "bg-light_grey",
     price: "React.js",
     mark: "Completed",
@@ -64,7 +64,7 @@ export const pricedeta: {
   {
     title: "Graphic ",
     short: "Design",
-    icon: "/icons/graphicdesign.png",
+    icon: "/images/icons/graphicdesign.png",
     background: "bg-light_grey",
     price: "Adobe",
     mark: "Completed",
