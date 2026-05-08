@@ -13,10 +13,18 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    // මචං, මෙතනට පොඩි check එකක් දාමු auth එක තියෙනවද බලන්න
+    if (!auth) {
+      console.error("Firebase auth is not initialized. Check your environment variables.");
+      setLoading(false);
+      return;
+    }
+
     const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
       setUser(firebaseUser);
       setLoading(false);
     });
+
     return () => unsubscribe();
   }, []);
 
