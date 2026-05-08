@@ -3,7 +3,7 @@ export const footerlabels: { label: string; href: string }[] = [
   { label: "Services", href: "#services" },
   { label: "Projects", href: "#projects" },
   { label: "Stack", href: "#stack" },
-  { label: "Contact", href: "#contact" },
+  { label: "Contact", href: "#contact" },  
 ];
 
 export const pricedeta: {
