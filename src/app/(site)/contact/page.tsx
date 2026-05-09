@@ -19,15 +19,12 @@ const ContactPage = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-
     try {
-      // Save contact message to Firestore
       await addDoc(collection(db, "messages"), {
         ...formData,
-        status: "unread", // To track unread messages in Admin Panel
+        status: "unread",
         createdAt: serverTimestamp(),
       });
-
       setSuccess(true);
       setFormData({ name: "", email: "", subject: "", message: "" });
       setTimeout(() => setSuccess(false), 5000);
@@ -39,106 +36,129 @@ const ContactPage = () => {
   };
 
   return (
-    <main className="bg-[#020617] min-h-screen text-slate-200">
+    <main className="bg-[#0D1117] min-h-screen text-slate-300 font-sans selection:bg-emerald-500/30">
       <Header />
-      
-      <section className="pt-32 pb-20 container mx-auto px-4">
-        <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-16 animate-in fade-in duration-700">
-            <h1 className="text-white text-4xl md:text-6xl font-bold mb-4">
-              Get In <span className="text-emerald-500">Touch</span>
-            </h1>
-            <p className="text-slate-400 max-w-xl mx-auto">
-              Have a project in mind or just want to say hi? Feel free to drop a message!
-            </p>
-          </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
-            {/* Contact Info */}
-            <div className="space-y-6">
-              {[
-                { icon: "tabler:mail", label: "Email Me", val: "yashith@example.com", color: "text-emerald-500" },
-                { icon: "tabler:brand-whatsapp", label: "WhatsApp", val: "+94 7X XXX XXXX", color: "text-green-500" },
-                { icon: "tabler:map-pin", label: "Location", val: "Colombo, Sri Lanka", color: "text-blue-500" },
-              ].map((item, i) => (
-                <div key={i} className="bg-[#0b0f1a] p-6 rounded-2xl border border-slate-800 flex items-center gap-4">
-                  <div className={`${item.color} bg-white/5 p-3 rounded-xl`}>
-                    <Icon icon={item.icon} width="28" />
-                  </div>
-                  <div>
-                    <p className="text-xs text-slate-500 font-bold uppercase">{item.label}</p>
-                    <p className="text-white font-medium">{item.val}</p>
-                  </div>
+      <section className="relative pt-32 pb-20 overflow-hidden">
+        {/* GitHub Style Background Glow */}
+        <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
+          <div className="absolute -top-[10%] -left-[10%] w-[40%] h-[40%] bg-emerald-500/10 blur-[120px] rounded-full" />
+          <div className="absolute top-[20%] right-[-5%] w-[30%] h-[30%] bg-blue-500/10 blur-[120px] rounded-full" />
+        </div>
+
+        <div className="container mx-auto px-6 relative z-10">
+          <div className="flex flex-col lg:flex-row gap-16 items-start max-w-7xl mx-auto">
+            
+            {/* Left Side: Content (GitHub Style) */}
+            <div className="lg:w-1/2 space-y-8 animate-in fade-in slide-in-from-left duration-700">
+              <div>
+                <h1 className="text-white text-5xl md:text-7xl font-extrabold tracking-tight mb-6">
+                  Let’s build the <br />
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400">
+                    future together.
+                  </span>
+                </h1>
+                <p className="text-slate-400 text-lg md:text-xl leading-relaxed max-w-lg">
+                  Whether you have a question or just want to say hi, my inbox is always open. 
+                  I’ll try my best to get back to you!
+                </p>
+              </div>
+
+              {/* Minimalist Contact Info Cards */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-8">
+                <div className="group border border-slate-800 bg-[#161B22]/50 p-5 rounded-2xl hover:border-emerald-500/50 transition-all duration-300">
+                  <Icon icon="tabler:mail" className="text-emerald-400 mb-3" width="24" />
+                  <p className="text-xs text-slate-500 uppercase font-bold tracking-widest">Email</p>
+                  <p className="text-white font-medium truncate">yashith@example.com</p>
                 </div>
-              ))}
+                <div className="group border border-slate-800 bg-[#161B22]/50 p-5 rounded-2xl hover:border-blue-500/50 transition-all duration-300">
+                  <Icon icon="tabler:brand-whatsapp" className="text-blue-400 mb-3" width="24" />
+                  <p className="text-xs text-slate-500 uppercase font-bold tracking-widest">Chat</p>
+                  <p className="text-white font-medium">+94 7X XXX XXXX</p>
+                </div>
+              </div>
             </div>
 
-            {/* Contact Form */}
-            <div className="lg:col-span-2">
-              <div className="bg-[#0b0f1a] p-8 rounded-3xl border border-slate-800 shadow-2xl">
+            {/* Right Side: Form (Modern GitHub Login Style) */}
+            <div className="lg:w-1/2 w-full animate-in fade-in slide-in-from-right duration-700">
+              <div className="bg-[#161B22] border border-[#30363D] p-8 md:p-10 rounded-3xl shadow-2xl relative overflow-hidden">
+                
                 {success ? (
-                  <div className="py-10 text-center animate-in zoom-in duration-500">
-                    <div className="w-20 h-20 bg-emerald-500/10 text-emerald-500 rounded-full flex items-center justify-center mx-auto mb-4">
-                      <Icon icon="tabler:check" width="40" />
+                  <div className="py-20 text-center animate-in zoom-in duration-500">
+                    <div className="w-20 h-20 bg-emerald-500/10 text-emerald-500 rounded-full flex items-center justify-center mx-auto mb-6">
+                      <Icon icon="tabler:circle-check" width="48" />
                     </div>
-                    <h3 className="text-2xl font-bold text-white">Message Sent!</h3>
-                    <p className="text-slate-400 mt-2">Thanks for reaching out. I'll get back to you soon.</p>
+                    <h3 className="text-2xl font-bold text-white mb-2">Success!</h3>
+                    <p className="text-slate-400">Your message has been delivered to my inbox.</p>
                   </div>
                 ) : (
-                  <form onSubmit={handleSubmit} className="space-y-6">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <form onSubmit={handleSubmit} className="space-y-5">
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium text-slate-300 ml-1">Full Name</label>
                       <input
                         type="text"
-                        placeholder="Your Name"
                         required
                         value={formData.name}
                         onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                        className="w-full bg-[#020617] border border-slate-800 rounded-xl p-4 text-white focus:border-emerald-500 outline-none transition"
+                        placeholder="e.g. John Doe"
+                        className="w-full bg-[#0D1117] border border-[#30363D] rounded-xl p-4 text-white placeholder:text-slate-600 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 outline-none transition-all"
                       />
+                    </div>
+
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium text-slate-300 ml-1">Email Address</label>
                       <input
                         type="email"
-                        placeholder="Your Email"
                         required
                         value={formData.email}
                         onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                        className="w-full bg-[#020617] border border-slate-800 rounded-xl p-4 text-white focus:border-emerald-500 outline-none transition"
+                        placeholder="john@example.com"
+                        className="w-full bg-[#0D1117] border border-[#30363D] rounded-xl p-4 text-white placeholder:text-slate-600 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 outline-none transition-all"
                       />
                     </div>
-                    <input
-                      type="text"
-                      placeholder="Subject"
-                      required
-                      value={formData.subject}
-                      onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
-                      className="w-full bg-[#020617] border border-slate-800 rounded-xl p-4 text-white focus:border-emerald-500 outline-none transition"
-                    />
-                    <textarea
-                      placeholder="Your Message"
-                      required
-                      rows={5}
-                      value={formData.message}
-                      onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                      className="w-full bg-[#020617] border border-slate-800 rounded-xl p-4 text-white focus:border-emerald-500 outline-none transition resize-none"
-                    />
+
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium text-slate-300 ml-1">Message</label>
+                      <textarea
+                        required
+                        rows={5}
+                        value={formData.message}
+                        onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                        placeholder="Tell me about your project or idea..."
+                        className="w-full bg-[#0D1117] border border-[#30363D] rounded-xl p-4 text-white placeholder:text-slate-600 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 outline-none transition-all resize-none"
+                      />
+                    </div>
+
                     <button
                       type="submit"
                       disabled={loading}
-                      className="w-full bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-bold py-4 rounded-xl shadow-lg shadow-emerald-500/20 transition active:scale-[0.98] disabled:opacity-50"
+                      className="w-full bg-[#238636] hover:bg-[#2EA043] disabled:bg-[#238636]/50 text-white font-bold py-4 rounded-xl shadow-lg transition-all active:scale-[0.98] flex items-center justify-center gap-2 group"
                     >
-                      {loading ? "Sending..." : "Send Message"}
+                      {loading ? (
+                        <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                      ) : (
+                        <>
+                          Send Message
+                          <Icon icon="tabler:arrow-right" className="group-hover:translate-x-1 transition-transform" />
+                        </>
+                      )}
                     </button>
+
+                    <p className="text-[10px] text-slate-500 text-center mt-4 uppercase tracking-[2px]">
+                      Encrypted and secured connection
+                    </p>
                   </form>
                 )}
               </div>
             </div>
+
           </div>
         </div>
       </section>
+
       <Footer />
     </main>
   );
 };
 
 export default ContactPage;
-
-

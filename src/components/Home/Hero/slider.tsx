@@ -46,7 +46,6 @@ const CardSlider = () => {
                 <div
                   className={`${item.background} ${item.padding} rounded-full flex items-center justify-center text-white`}
                 >
-                  {/* දැන් මෙතන icons ලස්සනට පේන්න ගනීවි */}
                   {item.icon}
                 </div>
                 <p className="text-white text-xs font-normal ">

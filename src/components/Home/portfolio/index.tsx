@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { EffectCoverflow, Pagination, Navigation } from "swiper/modules";
-import { Icon } from "@iconify/react"; // Icons පාවිච්චියට
+import { Icon } from "@iconify/react";// Icons පාවිච්චියට
 
 // Firebase imports
 import { db } from "@/lib/firebase";
@@ -20,7 +20,7 @@ const ProjectCarousel = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Featured projects විතරක් filter කරලා ගන්නවා
+    
     const q = query(
       collection(db, "projects"),
       where("status", "==", "Completed")
@@ -32,7 +32,7 @@ const ProjectCarousel = () => {
         allProjects.push({ id: doc.id, ...doc.data() });
       });
 
-      // isFeatured true ඒවා විතරක් පෙරා ගැනීම
+      
       const filtered = allProjects
         .filter(p => p.isFeatured === true)
         .sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0))
@@ -93,7 +93,6 @@ const ProjectCarousel = () => {
                     sizes="(max-width: 768px) 100vw, 380px"
                   />
 
-                  {/* Hover Buttons - ඔයාගේ Original Buttons වල Font style එකමයි (font-bold) */}
                   <div className="absolute inset-0 bg-black/60 flex flex-col items-center justify-center gap-3 opacity-0 group-hover/img:opacity-100 transition-opacity duration-300 z-20">
                     <a 
                       href={project.github || "#"} 

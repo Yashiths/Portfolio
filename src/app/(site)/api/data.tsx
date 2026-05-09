@@ -1,5 +1,13 @@
+import { 
+  IconShoppingCart, 
+  IconWorld, 
+  IconUserCircle, 
+  IconCode, 
+  IconPalette 
+} from "@tabler/icons-react";
+
 export const footerlabels: { label: string; href: string }[] = [
-  { label: "Home", href: "#" }, // herf -> href ලෙස වෙනස් කළා
+  { label: "Home", href: "#" },
   { label: "Services", href: "#services" },
   { label: "Projects", href: "#projects" },
   { label: "Stack", href: "#stack" },
@@ -9,7 +17,7 @@ export const footerlabels: { label: string; href: string }[] = [
 export const pricedeta: {
   title: string;
   short: string;
-  icon: string;
+  icon: React.ReactNode; // String එක React.ReactNode ලෙස වෙනස් කළා
   background: string;
   price: string;
   mark: string;
@@ -20,57 +28,57 @@ export const pricedeta: {
   {
     title: "E-commerce App",
     short: "Full Stack",
-    icon: "/images/icons/application.png",
+    icon: <IconShoppingCart size={24} />,
     background: "bg-primary bg-opacity-20",
     price: "React & Firebase",
     mark: "Live Project",
     width: 48,
     height: 48,
-    padding: "p-1",
+    padding: "p-3",
   },
   {
     title: "Modern Web Page",
     short: "UI/UX Design",
-    icon: "/images/icons/website.png",
+    icon: <IconWorld size={24} />,
     background: "bg-light_grey",
     price: "Next.js & Tailwind",
     mark: "Responsive",
     width: 48,
     height: 48,
-    padding: "p-1",
+    padding: "p-3",
   },
   {
     title: "Portfolio Site",
     short: "Personal",
-    icon: "/images/icons/portfolio.png",
+    icon: <IconUserCircle size={24} />,
     background: "bg-primary bg-opacity-20",
     price: "Next.js & Framer",
     mark: "Active",
     width: 48,
     height: 48,
-    padding: "p-1",
+    padding: "p-3",
   },
   {
     title: "Inventory System",
     short: "Management",
-    icon: "/images/icons/code.png",
+    icon: <IconCode size={24} />,
     background: "bg-light_grey",
     price: "React.js",
     mark: "Completed",
     width: 48,
     height: 48,
-    padding: "p-1",
+    padding: "p-3",
   },
   {
     title: "Graphic ",
     short: "Design",
-    icon: "/images/icons/graphicdesign.png",
+    icon: <IconPalette size={24} />,
     background: "bg-light_grey",
     price: "Adobe",
     mark: "Completed",
     width: 48,
     height: 48,
-    padding: "p-1",
+    padding: "p-3",
   }
 ];
 
@@ -124,7 +132,7 @@ export const timelineData: {
   title: string;
   text: string;
   position: string;
-  href: string; // href එක ඇඩ් කළා
+  href: string;
 }[] = [
   { 
     icon: "/images/timeline/icon-planning.svg", 
