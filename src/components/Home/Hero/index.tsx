@@ -3,31 +3,39 @@ import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import CardSlider from "./slider";
-//import { getImagePrefix } from "@/utils/utils";
 
 const Hero = () => {
   const leftAnimation = {
     initial: { x: "-100%", opacity: 0 },
     animate: { x: 0, opacity: 1 },
-    exit: { x: "-100%", opacity: 0 },
     transition: { duration: 0.6 },
   };
 
-  const rightAnimation = {
+  // මෙන්න මේක තමයි Floating එකට වෙනස් කළේ
+  const floatingRightAnimation = {
     initial: { x: "100%", opacity: 0 },
-    animate: { x: 0, opacity: 1 },
-    exit: { x: "100%", opacity: 0 },
-    transition: { duration: 0.6 },
+    animate: { 
+      x: 0, 
+      opacity: 1,
+      y: [0, -20, 0], // මේකෙන් තමයි උඩට පහළට පාවෙන්නේ
+    },
+    transition: { 
+      x: { duration: 0.6 }, // මුලින් ඇතුළට එන වේගය
+      opacity: { duration: 0.6 },
+      y: {
+        duration: 4,         // තත්පර 4ක ලූප් එකක්
+        repeat: Infinity,    // දිගටම වෙන්න
+        ease: "easeInOut",   // ස්ලෝ එකට වෙන්න
+      }
+    },
   };
 
   return (
-    <section
-      className="relative md:pt-40 md:pb-28 py-20 overflow-hidden z-1"
-      id="main-banner"
-    >
+    <section className="relative md:pt-40 md:pb-28 py-20 overflow-hidden z-1" id="main-banner">
       <div className="container mx-auto lg:max-w-screen-xl px-4">
         <div className="grid grid-cols-12 items-center">
           <motion.div {...leftAnimation} className="lg:col-span-6 col-span-12">
+            {/* ... ඔයාගේ කලින් තිබුණු Content එක ... */}
             <div className="flex gap-4 items-center lg:justify-start justify-center mb-6 mt-24">
               <span className="text-4xl animate-bounce">👋</span>
               <p className="text-white sm:text-28 text-18 mb-0 font-medium tracking-wide">
@@ -45,23 +53,17 @@ const Hero = () => {
             </p>
 
             <div className="flex items-center md:justify-start justify-center gap-6">
-              <Link
-                href="/projects"
-                className="bg-primary border border-primary rounded-lg text-18 font-semibold hover:bg-transparent hover:text-primary text-darkmode py-3 px-8 transition-all duration-300 shadow-lg shadow-primary/20"
-              >
+              <Link href="/projects" className="bg-primary border border-primary rounded-lg text-18 font-semibold hover:bg-transparent hover:text-primary text-darkmode py-3 px-8 transition-all duration-300 shadow-lg shadow-primary/20">
                 View My Work
               </Link>
-              <Link
-                href="/contact"
-                className="bg-transparent border border-primary rounded-lg text-18 font-semibold hover:bg-primary hover:text-darkmode text-primary py-3 px-8 transition-all duration-300"
-              >
+              <Link href="/contact" className="bg-transparent border border-primary rounded-lg text-18 font-semibold hover:bg-primary hover:text-darkmode text-primary py-3 px-8 transition-all duration-300">
                 Let's Talk
               </Link>
             </div>
           </motion.div>
 
           <motion.div
-            {...rightAnimation}
+            {...floatingRightAnimation} // අලුත් animation එක මෙතනට
             className="lg:col-span-6 col-span-12 lg:block hidden"
           >
             <div className="ml-10 relative">
@@ -83,7 +85,6 @@ const Hero = () => {
         </div>
       </div>
 
-      {/* Background Gradient Shapes */}
       <div className="absolute w-50 h-50 bg-gradient-to-bl from-tealGreen from-50% to-charcoalGray to-60% blur-400 rounded-full -top-64 -right-14 -z-1"></div>
       <div className="absolute w-40 h-40 bg-primary/10 blur-[150px] rounded-full bottom-0 left-0 -z-1"></div>
     </section>
