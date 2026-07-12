@@ -128,7 +128,7 @@ export default function VisualCMS() {
   if (loading) {
     return (
       <div className="flex flex-col items-center justify-center py-40 text-slate-500">
-        <Icon icon="line-md:loading-twotone-loop" className="text-emerald-500 text-5xl mb-4" />
+        <Icon icon="line-md:loading-twotone-loop" className="text-brand-green text-5xl mb-4" />
         <span className="font-black uppercase tracking-widest text-xs animate-pulse">Syncing Visual Canvas...</span>
       </div>
     );
@@ -150,7 +150,7 @@ export default function VisualCMS() {
           type="button"
           onClick={saveContent}
           disabled={saving}
-          className="bg-emerald-500 hover:bg-emerald-400 disabled:opacity-50 text-zinc-950 px-8 py-3.5 rounded-2xl font-black uppercase italic text-xs tracking-wider transition-all flex items-center gap-2 active:scale-95 shadow-lg shadow-emerald-500/10 cursor-pointer"
+          className="bg-brand-green hover:bg-brand-greenDark disabled:opacity-50 text-white px-8 py-3.5 rounded-2xl font-black uppercase italic text-xs tracking-wider transition-all flex items-center gap-2 active:scale-95 shadow-lg shadow-brand-green/10 cursor-pointer"
         >
           {saving ? (
             <Icon icon="line-md:loading-twotone-loop" width="18" />
@@ -162,7 +162,7 @@ export default function VisualCMS() {
       </div>
 
       {saveSuccess && (
-        <div className="p-4 bg-emerald-500/10 border border-emerald-500/30 rounded-2xl flex items-center gap-3 text-emerald-400 text-sm animate-in fade-in zoom-in-95 duration-300">
+        <div className="p-4 bg-brand-green/10 border border-brand-green/30 rounded-2xl flex items-center gap-3 text-emerald-400 text-sm animate-in fade-in zoom-in-95 duration-300">
           <Icon icon="tabler:circle-check" width="22" />
           <span className="font-bold">Database updated successfully! Changes are live on the website in real-time.</span>
         </div>
@@ -195,7 +195,7 @@ export default function VisualCMS() {
             {/* HERO SETTINGS TAB */}
             {activeTab === "hero" && (
               <div className="space-y-4 animate-in fade-in duration-300">
-                <h3 className="text-xs font-black uppercase tracking-wider text-emerald-500 border-b border-slate-800 pb-2">Hero Section Config</h3>
+                <h3 className="text-xs font-black uppercase tracking-wider text-brand-green border-b border-slate-800 pb-2">Hero Section Config</h3>
                 
                 <div className="space-y-1">
                   <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Greeting Text</label>
@@ -204,7 +204,7 @@ export default function VisualCMS() {
                     name="heroGreeting"
                     value={formData.heroGreeting}
                     onChange={handleInputChange}
-                    className="w-full bg-slate-900 border border-slate-800 p-3.5 rounded-xl text-white outline-none focus:border-emerald-500 font-medium text-sm transition-all"
+                    className="w-full bg-slate-900 border border-slate-800 p-3.5 rounded-xl text-white outline-none focus:border-brand-green font-medium text-sm transition-all"
                   />
                 </div>
 
@@ -215,7 +215,7 @@ export default function VisualCMS() {
                     name="heroTitle"
                     value={formData.heroTitle}
                     onChange={handleInputChange}
-                    className="w-full bg-slate-900 border border-slate-800 p-3.5 rounded-xl text-white outline-none focus:border-emerald-500 font-bold text-sm transition-all"
+                    className="w-full bg-slate-900 border border-slate-800 p-3.5 rounded-xl text-white outline-none focus:border-brand-green font-bold text-sm transition-all"
                   />
                 </div>
 
@@ -226,7 +226,7 @@ export default function VisualCMS() {
                     rows={4}
                     value={formData.heroDescription}
                     onChange={handleInputChange}
-                    className="w-full bg-slate-900 border border-slate-800 p-3.5 rounded-xl text-white outline-none focus:border-emerald-500 text-sm transition-all resize-none leading-relaxed"
+                    className="w-full bg-slate-900 border border-slate-800 p-3.5 rounded-xl text-white outline-none focus:border-brand-green text-sm transition-all resize-none leading-relaxed"
                   />
                 </div>
 
@@ -237,7 +237,7 @@ export default function VisualCMS() {
                     name="cvUrl"
                     value={formData.cvUrl}
                     onChange={handleInputChange}
-                    className="w-full bg-slate-900 border border-slate-800 p-3.5 rounded-xl text-white outline-none focus:border-emerald-500 font-mono text-sm transition-all"
+                    className="w-full bg-slate-900 border border-slate-800 p-3.5 rounded-xl text-white outline-none focus:border-brand-green font-mono text-sm transition-all"
                   />
                 </div>
               </div>
@@ -246,7 +246,7 @@ export default function VisualCMS() {
             {/* STATS SETTINGS TAB */}
             {activeTab === "stats" && (
               <div className="space-y-4 animate-in fade-in duration-300">
-                <h3 className="text-xs font-black uppercase tracking-wider text-emerald-500 border-b border-slate-800 pb-2">Stats Counter Config</h3>
+                <h3 className="text-xs font-black uppercase tracking-wider text-brand-green border-b border-slate-800 pb-2">Stats Counter Config</h3>
                 
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-1">
@@ -256,7 +256,7 @@ export default function VisualCMS() {
                       name="statsYearsVal"
                       value={formData.statsYearsVal}
                       onChange={handleInputChange}
-                      className="w-full bg-slate-900 border border-slate-800 p-3.5 rounded-xl text-white outline-none focus:border-emerald-500 font-bold text-sm"
+                      className="w-full bg-slate-900 border border-slate-800 p-3.5 rounded-xl text-white outline-none focus:border-brand-green font-bold text-sm"
                     />
                   </div>
                   <div className="space-y-1">
@@ -266,7 +266,7 @@ export default function VisualCMS() {
                       name="statsYearsLabel"
                       value={formData.statsYearsLabel}
                       onChange={handleInputChange}
-                      className="w-full bg-slate-900 border border-slate-800 p-3.5 rounded-xl text-white outline-none focus:border-emerald-500 text-sm"
+                      className="w-full bg-slate-900 border border-slate-800 p-3.5 rounded-xl text-white outline-none focus:border-brand-green text-sm"
                     />
                   </div>
                 </div>
@@ -279,7 +279,7 @@ export default function VisualCMS() {
                       name="statsProjectsVal"
                       value={formData.statsProjectsVal}
                       onChange={handleInputChange}
-                      className="w-full bg-slate-900 border border-slate-800 p-3.5 rounded-xl text-white outline-none focus:border-emerald-500 font-bold text-sm"
+                      className="w-full bg-slate-900 border border-slate-800 p-3.5 rounded-xl text-white outline-none focus:border-brand-green font-bold text-sm"
                     />
                   </div>
                   <div className="space-y-1">
@@ -289,7 +289,7 @@ export default function VisualCMS() {
                       name="statsProjectsLabel"
                       value={formData.statsProjectsLabel}
                       onChange={handleInputChange}
-                      className="w-full bg-slate-900 border border-slate-800 p-3.5 rounded-xl text-white outline-none focus:border-emerald-500 text-sm"
+                      className="w-full bg-slate-900 border border-slate-800 p-3.5 rounded-xl text-white outline-none focus:border-brand-green text-sm"
                     />
                   </div>
                 </div>
@@ -301,7 +301,7 @@ export default function VisualCMS() {
                     rows={3}
                     value={formData.statsQuote}
                     onChange={handleInputChange}
-                    className="w-full bg-slate-900 border border-slate-800 p-3.5 rounded-xl text-white outline-none focus:border-emerald-500 text-sm leading-relaxed resize-none"
+                    className="w-full bg-slate-900 border border-slate-800 p-3.5 rounded-xl text-white outline-none focus:border-brand-green text-sm leading-relaxed resize-none"
                   />
                 </div>
               </div>
@@ -310,7 +310,7 @@ export default function VisualCMS() {
             {/* SOCIAL SETTINGS TAB */}
             {activeTab === "social" && (
               <div className="space-y-4 animate-in fade-in duration-300">
-                <h3 className="text-xs font-black uppercase tracking-wider text-emerald-500 border-b border-slate-800 pb-2">Footer Contact & Socials</h3>
+                <h3 className="text-xs font-black uppercase tracking-wider text-brand-green border-b border-slate-800 pb-2">Footer Contact & Socials</h3>
                 
                 <div className="space-y-1">
                   <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Footer Bio Description</label>
@@ -319,7 +319,7 @@ export default function VisualCMS() {
                     rows={2}
                     value={formData.footerBio}
                     onChange={handleInputChange}
-                    className="w-full bg-slate-900 border border-slate-800 p-3.5 rounded-xl text-white outline-none focus:border-emerald-500 text-sm leading-relaxed resize-none"
+                    className="w-full bg-slate-900 border border-slate-800 p-3.5 rounded-xl text-white outline-none focus:border-brand-green text-sm leading-relaxed resize-none"
                   />
                 </div>
 
@@ -331,7 +331,7 @@ export default function VisualCMS() {
                       name="contactEmail"
                       value={formData.contactEmail}
                       onChange={handleInputChange}
-                      className="w-full bg-slate-900 border border-slate-800 p-3.5 rounded-xl text-white outline-none focus:border-emerald-500 text-sm"
+                      className="w-full bg-slate-900 border border-slate-800 p-3.5 rounded-xl text-white outline-none focus:border-brand-green text-sm"
                     />
                   </div>
                   <div className="space-y-1">
@@ -341,7 +341,7 @@ export default function VisualCMS() {
                       name="contactPhone"
                       value={formData.contactPhone}
                       onChange={handleInputChange}
-                      className="w-full bg-slate-900 border border-slate-800 p-3.5 rounded-xl text-white outline-none focus:border-emerald-500 text-sm"
+                      className="w-full bg-slate-900 border border-slate-800 p-3.5 rounded-xl text-white outline-none focus:border-brand-green text-sm"
                     />
                   </div>
                 </div>
@@ -354,7 +354,7 @@ export default function VisualCMS() {
                     value={formData.socialLinkedin}
                     onChange={handleInputChange}
                     placeholder="https://linkedin.com/in/username"
-                    className="w-full bg-slate-900 border border-slate-800 p-3.5 rounded-xl text-emerald-400 font-mono text-sm outline-none focus:border-emerald-500"
+                    className="w-full bg-slate-900 border border-slate-800 p-3.5 rounded-xl text-emerald-400 font-mono text-sm outline-none focus:border-brand-green"
                   />
                 </div>
 
@@ -382,8 +382,8 @@ export default function VisualCMS() {
           <div className="bg-[#0f172a] border border-slate-800 rounded-[2rem] overflow-hidden shadow-2xl">
             {/* Title / Controls for Mockup */}
             <div className="bg-slate-900 px-6 py-4 border-b border-slate-800 flex justify-between items-center">
-              <span className="text-[10px] font-black uppercase tracking-[0.2em] text-emerald-500 flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span> Live Mockup Preview
+              <span className="text-[10px] font-black uppercase tracking-[0.2em] text-brand-green flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-brand-green animate-ping"></span> Live Mockup Preview
               </span>
               <span className="text-[9px] font-bold text-slate-500">Desktop Representation</span>
             </div>
@@ -396,7 +396,7 @@ export default function VisualCMS() {
 
               {/* 1. HERO CANVAS PIECE */}
               <div className="space-y-4 border border-dashed border-slate-800/80 p-6 rounded-2xl relative bg-slate-950/20">
-                <span className="absolute -top-3 left-4 bg-emerald-500 text-zinc-950 text-[8px] font-black uppercase px-2 py-0.5 rounded-md tracking-wider">Hero Section</span>
+                <span className="absolute -top-3 left-4 bg-brand-green text-white text-[8px] font-black uppercase px-2 py-0.5 rounded-md tracking-wider">Hero Section</span>
                 
                 <div className="flex gap-2 items-center text-xs mt-2 text-slate-400">
                   <span>👋</span>
@@ -424,7 +424,7 @@ export default function VisualCMS() {
 
               {/* 2. STATS CANVAS PIECE */}
               <div className="grid grid-cols-2 gap-4 border border-dashed border-slate-800/80 p-6 rounded-2xl relative bg-slate-950/20">
-                <span className="absolute -top-3 left-4 bg-emerald-500 text-zinc-950 text-[8px] font-black uppercase px-2 py-0.5 rounded-md tracking-wider">Stats Counters</span>
+                <span className="absolute -top-3 left-4 bg-brand-green text-white text-[8px] font-black uppercase px-2 py-0.5 rounded-md tracking-wider">Stats Counters</span>
                 
                 <div className="bg-[#0b1120] border border-white/5 p-4 rounded-2xl text-center">
                   <h3 className="text-primary text-3xl font-black mb-1">{formData.statsYearsVal}+</h3>
@@ -441,7 +441,7 @@ export default function VisualCMS() {
 
               {/* 3. FOOTER CANVAS PIECE */}
               <div className="border border-dashed border-slate-800/80 p-6 rounded-2xl relative bg-slate-950/20 space-y-4">
-                <span className="absolute -top-3 left-4 bg-emerald-500 text-zinc-950 text-[8px] font-black uppercase px-2 py-0.5 rounded-md tracking-wider">Footer Bindings</span>
+                <span className="absolute -top-3 left-4 bg-brand-green text-white text-[8px] font-black uppercase px-2 py-0.5 rounded-md tracking-wider">Footer Bindings</span>
                 
                 <div className="flex flex-col md:flex-row justify-between items-start gap-4 text-xs">
                   <div className="space-y-2 max-w-xs">

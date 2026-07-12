@@ -111,9 +111,9 @@ const AboutSection = () => {
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
           >
-            <h4 className="text-emerald-600 dark:text-emerald-400 text-sm font-black uppercase tracking-[0.2em] mb-4">Get to know me</h4>
+            <h4 className="text-brand-green dark:text-emerald-400 text-sm font-black uppercase tracking-[0.2em] mb-4">Get to know me</h4>
             <h2 className="text-slate-950 dark:text-white text-4xl md:text-5xl font-bold leading-tight mb-6">
-              Turning complex problems into <span className="text-emerald-600 dark:text-emerald-400">elegant solutions.</span>
+              Turning complex problems into <span className="text-brand-green dark:text-emerald-400">elegant solutions.</span>
             </h2>
             <p className="text-slate-600 dark:text-slate-400 text-lg leading-relaxed mb-8">
               I am a passionate Full-Stack Developer and Software Engineer with expertise in building high-performance web applications. 
@@ -127,7 +127,7 @@ const AboutSection = () => {
                 download 
                 target="_blank"
                 rel="noopener noreferrer"
-                className="bg-emerald-600 text-white hover:bg-emerald-700 dark:bg-emerald-500 dark:text-zinc-950 px-8 py-4 rounded-xl font-bold uppercase italic text-xs tracking-wider transition-all duration-300 flex items-center gap-2"
+                className="bg-brand-green text-white hover:bg-brand-greenDark dark:bg-emerald-500 dark:text-zinc-950 px-8 py-4 rounded-xl font-bold uppercase italic text-xs tracking-wider transition-all duration-300 flex items-center gap-2"
               >
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
                 Download CV
@@ -157,7 +157,7 @@ const AboutSection = () => {
 
               {/* Counter Card 1 */}
               <div className="bg-white border border-zinc-100 shadow-sm dark:bg-zinc-900/50 dark:border-zinc-800 dark:shadow-none p-8 rounded-3xl text-center transition-transform duration-300 hover:-translate-y-1">
-                <h3 className="text-emerald-600 dark:text-emerald-400 text-5xl font-black mb-2 select-none tracking-tight">
+                <h3 className="text-brand-green dark:text-emerald-400 text-5xl font-black mb-2 select-none tracking-tight">
                   <CountUp value={stats.statsYearsVal || 2} suffix="+" />
                 </h3>
                 <p className="text-slate-500 dark:text-slate-400 uppercase tracking-widest text-[10px] font-bold">
@@ -167,7 +167,7 @@ const AboutSection = () => {
 
               {/* Counter Card 2 */}
               <div className="bg-white border border-zinc-100 shadow-sm dark:bg-zinc-900/50 dark:border-zinc-800 dark:shadow-none p-8 rounded-3xl text-center transition-transform duration-300 hover:-translate-y-1">
-                <h3 className="text-emerald-600 dark:text-emerald-400 text-5xl font-black mb-2 select-none tracking-tight">
+                <h3 className="text-brand-green dark:text-emerald-400 text-5xl font-black mb-2 select-none tracking-tight">
                   <CountUp value={stats.statsProjectsVal || 15} suffix="+" />
                 </h3>
                 <p className="text-slate-500 dark:text-slate-400 uppercase tracking-widest text-[10px] font-bold">

@@ -49,6 +49,10 @@ const config: Config = {
         '999': '999'
       },
       colors: {
+        brand: {
+          green: '#248a60',
+          greenDark: '#1b6949',
+        },
         primary: "#99E39E",
         secondary: "#1DC8CD",
         midnight_text: "#263238",
