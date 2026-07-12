@@ -9,6 +9,9 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        sans: ["var(--font-sans)", "sans-serif"],
+      },
       maxWidth: {
         'screen-xl': '75rem',
         'screen-2xl': '83.75rem'

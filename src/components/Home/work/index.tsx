@@ -1,26 +1,120 @@
 "use client";
+import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
-import { motion } from "framer-motion";
+import { motion, useInView } from "framer-motion";
+import { db } from "@/lib/firebase";
+import { doc, onSnapshot } from "firebase/firestore";
+
+interface StatsData {
+  statsYearsVal?: number;
+  statsYearsLabel?: string;
+  statsProjectsVal?: number;
+  statsProjectsLabel?: string;
+  statsQuote?: string;
+}
+
+function runCountAnimation(
+  from: number,
+  to: number,
+  options: { duration: number; onUpdate: (v: number) => void }
+) {
+  let startTimestamp: number | null = null;
+  let rAFId: number;
+
+  const step = (timestamp: number) => {
+    if (!startTimestamp) startTimestamp = timestamp;
+    const progress = Math.min((timestamp - startTimestamp) / (options.duration * 1000), 1);
+
+    // Ease out quad
+    const val = from + (to - from) * (progress * (2 - progress));
+    options.onUpdate(val);
+
+    if (progress < 1) {
+      rAFId = window.requestAnimationFrame(step);
+    }
+  };
+
+  rAFId = window.requestAnimationFrame(step);
+  return {
+    stop: () => window.cancelAnimationFrame(rAFId),
+  };
+}
+
+// Reusable Scroll-triggered CountUp Component using Framer Motion
+const CountUp = ({ value, suffix = "" }: { value: number; suffix?: string }) => {
+  const ref = useRef<HTMLSpanElement>(null);
+  const inView = useInView(ref, { once: true, margin: "-50px" });
+
+  useEffect(() => {
+    if (inView) {
+      const controls = runCountAnimation(0, value, {
+        duration: 2.0,
+        onUpdate: (latest) => {
+          if (ref.current) {
+            ref.current.textContent = Math.floor(latest) + suffix;
+          }
+        },
+      });
+      return () => controls.stop();
+    }
+  }, [inView, value, suffix]);
+
+  return <span ref={ref}>0{suffix}</span>;
+};
 
 const AboutSection = () => {
+  const [stats, setStats] = useState<StatsData>({
+    statsYearsVal: 2,
+    statsYearsLabel: "Years Experience",
+    statsProjectsVal: 15,
+    statsProjectsLabel: "Projects Done",
+    statsQuote: "Driven by fitness and code, I believe in consistency and continuous improvement."
+  });
+
+  // Listen to stats content in real-time
+  useEffect(() => {
+    if (!db) return;
+    try {
+      const unsub = onSnapshot(doc(db, "portfolio_content", "homepage"), (docSnap) => {
+        if (docSnap.exists()) {
+          const data = docSnap.data();
+          setStats((prev) => ({
+            ...prev,
+            statsYearsVal: Number(data.statsYearsVal) || prev.statsYearsVal,
+            statsYearsLabel: data.statsYearsLabel || prev.statsYearsLabel,
+            statsProjectsVal: Number(data.statsProjectsVal) || prev.statsProjectsVal,
+            statsProjectsLabel: data.statsProjectsLabel || prev.statsProjectsLabel,
+            statsQuote: data.statsQuote || prev.statsQuote,
+          }));
+        }
+      }, (err) => {
+        console.warn("Firestore stats subscription error: ", err);
+      });
+      return () => unsub();
+    } catch (e) {
+      console.warn("Firestore stats error: ", e);
+    }
+  }, []);
+
   return (
-    <section className="relative py-20 overflow-hidden" id="about">
-      <div className="container mx-auto lg:max-w-screen-xl md:max-w-screen-md px-4">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+    <section className="relative py-24 overflow-hidden bg-slate-50 dark:bg-darkmode text-slate-900 dark:text-slate-200 transition-colors duration-300 border-t border-slate-200 dark:border-white/5" id="about">
+      <div className="container mx-auto lg:max-w-screen-xl md:max-w-screen-md px-4 relative z-10">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           
           {/* Left Side: Content */}
           <motion.div
             initial={{ x: -50, opacity: 0 }}
             whileInView={{ x: 0, opacity: 1 }}
             transition={{ duration: 0.8 }}
+            viewport={{ once: true }}
           >
-            <h4 className="text-primary text-20 font-medium mb-4">Get to know me</h4>
-            <h2 className="text-white text-40 md:text-50 font-semibold leading-tight mb-6">
+            <h4 className="text-primary text-sm font-black uppercase tracking-[0.2em] mb-4">Get to know me</h4>
+            <h2 className="text-slate-950 dark:text-white text-4xl md:text-5xl font-bold leading-tight mb-6">
               Turning complex problems into <span className="text-primary">elegant solutions.</span>
             </h2>
-            <p className="text-muted text-lg leading-relaxed mb-8">
+            <p className="text-slate-600 dark:text-slate-400 text-lg leading-relaxed mb-8">
               I am a passionate Full-Stack Developer and Software Engineer with expertise in building high-performance web applications. 
-              With a background in Temenos T24 core banking and modern frameworks like Next.js, I bridge the gap between robust backend logic and seamless frontend experiences.
+              With a background in Temenos T24 core banking integrations and modern frameworks like Next.js, I bridge the gap between robust backend systems and seamless frontend interfaces.
             </p>
             
             <div className="flex flex-wrap gap-5">
@@ -28,41 +122,58 @@ const AboutSection = () => {
               <a 
                 href="/path-to-your-cv.pdf" 
                 download 
-                className="bg-primary hover:bg-primary/80 text-black px-8 py-4 rounded-full font-semibold transition-all flex items-center gap-2"
+                className="bg-primary hover:bg-primary/80 text-black px-8 py-4 rounded-xl font-bold uppercase italic text-xs tracking-wider transition-all duration-300 flex items-center gap-2 shadow-lg shadow-primary/20"
               >
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
                 Download CV
               </a>
               
               {/* Hire Me / Contact Button */}
               <a 
                 href="#contact" 
-                className="border border-white/20 hover:border-primary text-white px-8 py-4 rounded-full font-semibold transition-all"
+                className="border border-slate-300 dark:border-white/20 hover:border-primary text-slate-700 dark:text-white hover:text-black hover:bg-primary dark:hover:text-black dark:hover:bg-primary px-8 py-4 rounded-xl font-bold uppercase italic text-xs tracking-wider transition-all duration-300 flex items-center"
               >
                 Hire Me
               </a>
             </div>
           </motion.div>
 
-          {/* Right Side: Simple Stats or Image Placeholder */}
+          {/* Right Side: Animated Stats and Personal Quote */}
           <motion.div
             initial={{ x: 50, opacity: 0 }}
             whileInView={{ x: 0, opacity: 1 }}
             transition={{ duration: 0.8 }}
+            viewport={{ once: true }}
             className="relative"
           >
-            <div className="grid grid-cols-2 gap-6">
-              <div className="bg-light_grey/10 p-8 rounded-3xl border border-white/5 text-center">
-                <h3 className="text-primary text-40 font-bold mb-2">2+</h3>
-                <p className="text-muted uppercase tracking-wider text-sm">Years Experience</p>
+            <div className="grid grid-cols-2 gap-6 relative">
+              {/* Soft glow underlying card */}
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-primary/10 rounded-full blur-[80px] -z-10"></div>
+
+              {/* Counter Card 1 */}
+              <div className="bg-white dark:bg-[#0b1120] p-8 rounded-3xl border border-slate-200 dark:border-white/5 text-center shadow-md dark:shadow-2xl transition-transform duration-300 hover:-translate-y-1 hover:border-primary/20">
+                <h3 className="text-primary text-5xl font-black mb-2 select-none tracking-tight">
+                  <CountUp value={stats.statsYearsVal || 2} suffix="+" />
+                </h3>
+                <p className="text-slate-500 dark:text-slate-400 uppercase tracking-widest text-[10px] font-bold">
+                  {stats.statsYearsLabel}
+                </p>
               </div>
-              <div className="bg-light_grey/10 p-8 rounded-3xl border border-white/5 text-center">
-                <h3 className="text-primary text-40 font-bold mb-2">15+</h3>
-                <p className="text-muted uppercase tracking-wider text-sm">Projects Done</p>
+
+              {/* Counter Card 2 */}
+              <div className="bg-white dark:bg-[#0b1120] p-8 rounded-3xl border border-slate-200 dark:border-white/5 text-center shadow-md dark:shadow-2xl transition-transform duration-300 hover:-translate-y-1 hover:border-primary/20">
+                <h3 className="text-primary text-5xl font-black mb-2 select-none tracking-tight">
+                  <CountUp value={stats.statsProjectsVal || 15} suffix="+" />
+                </h3>
+                <p className="text-slate-500 dark:text-slate-400 uppercase tracking-widest text-[10px] font-bold">
+                  {stats.statsProjectsLabel}
+                </p>
               </div>
-              <div className="bg-light_grey/10 p-8 rounded-3xl border border-white/5 text-center col-span-2">
-                <p className="text-white text-lg italic">
-                  "Driven by fitness and code, I believe in consistency and continuous improvement."
+
+              {/* Quote Card */}
+              <div className="bg-white dark:bg-[#0b1120] p-8 rounded-3xl border border-slate-200 dark:border-white/5 text-center col-span-2 shadow-md dark:shadow-2xl hover:border-primary/10 transition-colors">
+                <p className="text-slate-700 dark:text-slate-300 text-md italic font-semibold leading-relaxed mb-0">
+                  "{stats.statsQuote}"
                 </p>
               </div>
             </div>

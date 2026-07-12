@@ -1,3 +1,5 @@
+"use client";
+import React from "react";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -9,8 +11,8 @@ const CardSlider = () => {
     dots: false,
     arrows: false,
     infinite: true,
-    autoplaySpeed: 1500,
-    speed: 300,
+    autoplaySpeed: 2000,
+    speed: 500,
     slidesToShow: 4,
     slidesToScroll: 1,
     cssEase: "ease-in-out",
@@ -41,26 +43,30 @@ const CardSlider = () => {
       <Slider {...settings}>
         {pricedeta.map((item, index) => (
           <div key={index} className="pr-6">
-            <div className="px-5 py-6 bg-dark_grey bg-opacity-80 rounded-xl">
+            <div className="px-5 py-6 bg-slate-50 dark:bg-dark_grey/80 border border-slate-200 dark:border-white/5 rounded-xl shadow-sm dark:shadow-md transition-all duration-300">
               <div className="flex items-center gap-5">
                 <div
-                  className={`${item.background} ${item.padding} rounded-full flex items-center justify-center text-white`}
+                  className={`${item.background} ${item.padding} rounded-full flex items-center justify-center text-primary dark:text-white bg-primary/10 dark:bg-primary/20`}
                 >
                   {item.icon}
                 </div>
-                <p className="text-white text-xs font-normal ">
-                  <span className="text-16 font-bold mr-2">{item.title}</span>
-                  {item.short}
-                </p>
+                <div className="text-slate-800 dark:text-white text-xs font-normal">
+                  <p className="text-16 font-bold mr-2 text-slate-900 dark:text-white leading-tight">
+                    {item.title}
+                  </p>
+                  <span className="text-slate-500 dark:text-slate-400 text-[10px] uppercase font-bold tracking-wider">{item.short}</span>
+                </div>
               </div>
-              <div className="flex justify-between mt-7">
-                <div className="">
-                  <p className="text-16 font-bold text-white mb-0 leading-none">
+              
+              <div className="flex justify-between items-end mt-7">
+                <div>
+                  <p className="text-[10px] text-slate-400 dark:text-slate-500 uppercase tracking-widest font-semibold mb-1">Stack</p>
+                  <p className="text-14 font-black text-slate-800 dark:text-white mb-0 leading-none">
                     {item.price}
                   </p>
                 </div>
-                <div className="">
-                  <span className="text-error text-xs">{item.mark}</span>
+                <div>
+                  <span className="text-emerald-600 dark:text-primary text-[10px] uppercase font-bold tracking-wider">{item.mark}</span>
                 </div>
               </div>
             </div>

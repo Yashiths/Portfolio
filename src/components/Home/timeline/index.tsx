@@ -29,7 +29,7 @@ const skillsData = [
 
 const SkillsSection = () => {
   return (
-    <section className="md:pt-40 pt-9" id="stack">
+    <section className="md:pt-40 pt-9 bg-white dark:bg-darkmode text-slate-900 dark:text-slate-200 transition-colors duration-300" id="stack">
       <div className="container mx-auto lg:max-w-screen-xl md:max-w-screen-md lg:px-16 px-4">
         <div className="text-center">
           <motion.div
@@ -37,10 +37,10 @@ const SkillsSection = () => {
             initial={{ y: "-50%", opacity: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <h2 className="text-white sm:text-48 text-36 font-medium lg:w-[80%] mx-auto mb-6">
+            <h2 className="text-slate-950 dark:text-white sm:text-48 text-36 font-bold lg:w-[80%] mx-auto mb-6">
               Skills & Technologies
             </h2>
-            <p className="text-muted text-opacity-80 sm:text-20 text-16 mb-20 max-w-[600px] mx-auto">
+            <p className="text-slate-600 dark:text-slate-400 sm:text-20 text-16 mb-20 max-w-[600px] mx-auto">
               Here are the technologies I work with to bring ideas to life
             </p>
           </motion.div>
@@ -51,7 +51,7 @@ const SkillsSection = () => {
               
               {/* Central Icon Cloud - Added pointer-events-auto */}
               <div className="absolute inset-0 flex justify-center items-center z-10 pointer-events-auto">
-                <div className="w-[500px] h-[500px] flex items-center justify-center cursor-pointer">
+                <div className="w-[600px] flex items-center justify-center cursor-pointer">
                    <IconCloud />
                 </div>
               </div>
@@ -62,44 +62,44 @@ const SkillsSection = () => {
                 {/* Skill 1 - Top Left (Added pointer-events-auto to individual items) */}
                 <div className="absolute top-0 left-0 w-80 flex items-center gap-4 text-right justify-end pointer-events-auto">
                   <div>
-                    <h5 className="text-muted text-2xl font-medium">{skillsData[0].title}</h5>
-                    <p className="text-sm text-muted opacity-60">{skillsData[0].text}</p>
+                    <h5 className="text-slate-800 dark:text-white text-2xl font-bold">{skillsData[0].title}</h5>
+                    <p className="text-sm text-slate-500 dark:text-slate-400">{skillsData[0].text}</p>
                   </div>
-                  <div className="bg-light_grey/20 p-4 rounded-full border border-white/5">
+                  <div className="bg-slate-100 dark:bg-light_grey/20 p-4 rounded-full border border-slate-200 dark:border-white/5">
                     <Image src={`/${skillsData[0].icon}`} alt={skillsData[0].title} width={40} height={40} />
                   </div>
                 </div>
 
                 {/* Skill 2 - Top Right */}
                 <div className="absolute top-0 right-0 w-80 flex items-center gap-4 text-left pointer-events-auto">
-                  <div className="bg-light_grey/20 p-4 rounded-full border border-white/5">
+                  <div className="bg-slate-100 dark:bg-light_grey/20 p-4 rounded-full border border-slate-200 dark:border-white/5">
                     <Image src={`/${skillsData[1].icon}`} alt={skillsData[1].title} width={40} height={40} />
                   </div>
                   <div>
-                    <h5 className="text-muted text-2xl font-medium">{skillsData[1].title}</h5>
-                    <p className="text-sm text-muted opacity-60">{skillsData[1].text}</p>
+                    <h5 className="text-slate-800 dark:text-white text-2xl font-bold">{skillsData[1].title}</h5>
+                    <p className="text-sm text-slate-500 dark:text-slate-400">{skillsData[1].text}</p>
                   </div>
                 </div>
 
                 {/* Skill 3 - Bottom Left */}
                 <div className="absolute bottom-10 left-0 w-80 flex items-center gap-4 text-right justify-end pointer-events-auto">
                   <div>
-                    <h5 className="text-muted text-2xl font-medium">{skillsData[2].title}</h5>
-                    <p className="text-sm text-muted opacity-60">{skillsData[2].text}</p>
+                    <h5 className="text-slate-800 dark:text-white text-2xl font-bold">{skillsData[2].title}</h5>
+                    <p className="text-sm text-slate-500 dark:text-slate-400">{skillsData[2].text}</p>
                   </div>
-                  <div className="bg-light_grey/20 p-4 rounded-full border border-white/5">
+                  <div className="bg-slate-100 dark:bg-light_grey/20 p-4 rounded-full border border-slate-200 dark:border-white/5">
                     <Image src={`/${skillsData[2].icon}`} alt={skillsData[2].title} width={40} height={40} />
                   </div>
                 </div>
 
                 {/* Skill 4 - Bottom Right */}
                 <div className="absolute bottom-10 right-0 w-80 flex items-center gap-4 text-left pointer-events-auto">
-                  <div className="bg-light_grey/20 p-4 rounded-full border border-white/5">
+                  <div className="bg-slate-100 dark:bg-light_grey/20 p-4 rounded-full border border-slate-200 dark:border-white/5">
                     <Image src={`/${skillsData[3].icon}`} alt={skillsData[3].title} width={40} height={40} />
                   </div>
                   <div>
-                    <h5 className="text-muted text-2xl font-medium">{skillsData[3].title}</h5>
-                    <p className="text-sm text-muted opacity-60">{skillsData[3].text}</p>
+                    <h5 className="text-slate-800 dark:text-white text-2xl font-bold">{skillsData[3].title}</h5>
+                    <p className="text-sm text-slate-500 dark:text-slate-400">{skillsData[3].text}</p>
                   </div>
                 </div>
               </div>
@@ -108,13 +108,13 @@ const SkillsSection = () => {
             {/* Mobile View */}
             <div className="grid grid-cols-1 gap-8 md:hidden mt-10">
               {skillsData.map((item, index) => (
-                <div key={index} className="flex items-center gap-6 p-4 bg-light_grey/10 rounded-xl">
+                <div key={index} className="flex items-center gap-6 p-4 bg-slate-100/50 dark:bg-light_grey/10 rounded-xl border border-slate-200/50 dark:border-transparent">
                   <div className="bg-primary/20 p-4 rounded-full">
                     <Image src={`/${item.icon}`} alt={item.title} width={35} height={35} />
                   </div>
                   <div className="text-start">
-                    <h4 className="text-white text-xl font-medium">{item.title}</h4>
-                    <p className="text-muted text-sm">{item.text}</p>
+                    <h4 className="text-slate-900 dark:text-white text-xl font-bold">{item.title}</h4>
+                    <p className="text-slate-600 dark:text-slate-400 text-sm">{item.text}</p>
                   </div>
                 </div>
               ))}

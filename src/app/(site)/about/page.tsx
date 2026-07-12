@@ -1,7 +1,5 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import Header from "@/components/Layout/Header"; 
-import Footer from "@/components/Layout/Footer";
 import { GraduationCap, Award } from "lucide-react";
 // Firebase imports
 import { db } from "@/lib/firebase";
@@ -26,8 +24,7 @@ const AboutPage = () => {
   if (loading) return null; // Or a simple loader
 
   return (
-    <main className="bg-darkmode min-h-screen">
-      <Header />
+    <main className="bg-white dark:bg-darkmode min-h-screen">
       
       <section className="pt-32 pb-20 px-4">
         <div className="container mx-auto max-w-5xl">

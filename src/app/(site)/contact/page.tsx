@@ -1,7 +1,5 @@
 "use client";
 import React, { useState } from "react";
-import Header from "@/components/Layout/Header";
-import Footer from "@/components/Layout/Footer";
 import { db } from "@/lib/firebase";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import { Icon } from "@iconify/react";
@@ -36,8 +34,8 @@ const ContactPage = () => {
   };
 
   return (
-    <main className="bg-[#0D1117] min-h-screen text-slate-300 font-sans selection:bg-emerald-500/30">
-      <Header />
+    <main className="bg-white dark:bg-[#0D1117] min-h-screen text-slate-800 dark:text-slate-300 font-sans selection:bg-emerald-500/30">
+      
 
       <section className="relative pt-32 pb-20 overflow-hidden">
         {/* GitHub Style Background Glow */}

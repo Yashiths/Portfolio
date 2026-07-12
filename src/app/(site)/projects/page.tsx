@@ -2,8 +2,6 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import Header from "@/components/Layout/Header";
-import Footer from "@/components/Layout/Footer";
 import { Icon } from "@iconify/react";
 
 import { db } from "@/lib/firebase"; 
@@ -40,8 +38,7 @@ const ProjectsPage = () => {
   const totalPages = Math.ceil(projects.length / projectsPerPage);
 
   return (
-    <main className="bg-[#020617] min-h-screen text-slate-200">
-      <Header />
+    <main className="bg-white dark:bg-darkmode min-h-screen text-slate-900 dark:text-slate-200">
       
       <section className="pt-32 pb-20 container mx-auto px-4">
         <div className="text-center mb-16 animate-in fade-in slide-in-from-top-4 duration-700">
@@ -61,10 +58,10 @@ const ProjectsPage = () => {
           <>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {currentProjects.map((project) => (
-                <div key={project.id} className="group bg-[#0b0f1a] rounded-2xl border border-slate-800 overflow-hidden hover:border-emerald-500/50 transition-all duration-500 shadow-xl flex flex-col h-full">
+                <div key={project.id} className="group bg-slate-50 dark:bg-[#0b0f1a] rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden hover:border-emerald-500/50 transition-all duration-500 shadow-md dark:shadow-xl flex flex-col h-full">
                   
                   <div className="relative h-60 w-full overflow-hidden">
-                    <Image 
+                     <Image 
                       src={project.imageUrl || "/images/placeholder.jpg"} 
                       alt={project.title}
                       fill
@@ -83,12 +80,12 @@ const ProjectsPage = () => {
                   </div>
                   
                   <div className="p-6 flex flex-col flex-1">
-                    <h3 className="text-white text-xl font-bold tracking-tight mb-2">{project.title}</h3>
-                    <p className="text-slate-400 text-sm line-clamp-2 mb-4">{project.description}</p>
+                    <h3 className="text-slate-900 dark:text-white text-xl font-bold tracking-tight mb-2">{project.title}</h3>
+                    <p className="text-slate-600 dark:text-slate-400 text-sm line-clamp-2 mb-4">{project.description}</p>
                     
                     <div className="flex gap-2 flex-wrap mt-auto">
                       {project.tags && project.tags.map((tag: string, i: number) => (
-                        <span key={i} className="text-[10px] bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2.5 py-1 rounded-md font-bold uppercase tracking-wider">
+                        <span key={i} className="text-[10px] bg-emerald-500/10 text-emerald-500 dark:text-emerald-400 border border-emerald-500/20 px-2.5 py-1 rounded-md font-bold uppercase tracking-wider">
                           {tag}
                         </span>
                       ))}

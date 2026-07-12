@@ -10,6 +10,7 @@ const menuItems = [
   { name: "Overview", href: "/admin/dashboard", icon: "tabler:layout-dashboard" },
   { name: "Projects", href: "/admin/projects", icon: "tabler:briefcase" },
   { name: "Showcase", href: "/admin/projects/manage", icon: "tabler:stars" },
+  { name: "Visual CMS", href: "/admin/cms", icon: "tabler:edit" },
   { name: "Messages", href: "/admin/messages", icon: "tabler:mail" },
   { name: "Finance", href: "/admin/expenses", icon: "tabler:chart-bar" }, 
   { name: "Profile", href: "/admin/profile", icon: "tabler:user-cog" },
