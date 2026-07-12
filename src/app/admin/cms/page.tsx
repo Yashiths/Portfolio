@@ -8,6 +8,7 @@ interface CMSData {
   heroGreeting: string;
   heroTitle: string;
   heroDescription: string;
+  cvUrl: string;
   statsYearsVal: number;
   statsYearsLabel: string;
   statsProjectsVal: number;
@@ -26,6 +27,7 @@ const defaultCMSData: CMSData = {
   heroGreeting: "Hello, I am Yashith Sasmitha",
   heroTitle: "Full Stack Web Developer specializing in React",
   heroDescription: "I build modern, scalable web applications using React.js, Next.js, and Firebase. Focused on creating clean user interfaces and robust backend integrations.",
+  cvUrl: "https://drive.google.com/file/d/1Xqm9HTOQXHr3ocTSFcykMhPcwUrusIa6/view?usp=drive_link",
   statsYearsVal: 2,
   statsYearsLabel: "Years Experience",
   statsProjectsVal: 15,
@@ -63,6 +65,7 @@ export default function VisualCMS() {
             heroGreeting: data.heroGreeting ?? defaultCMSData.heroGreeting,
             heroTitle: data.heroTitle ?? defaultCMSData.heroTitle,
             heroDescription: data.heroDescription ?? defaultCMSData.heroDescription,
+            cvUrl: data.cvUrl ?? defaultCMSData.cvUrl,
             statsYearsVal: Number(data.statsYearsVal) ?? defaultCMSData.statsYearsVal,
             statsYearsLabel: data.statsYearsLabel ?? defaultCMSData.statsYearsLabel,
             statsProjectsVal: Number(data.statsProjectsVal) ?? defaultCMSData.statsProjectsVal,
@@ -224,6 +227,17 @@ export default function VisualCMS() {
                     value={formData.heroDescription}
                     onChange={handleInputChange}
                     className="w-full bg-slate-900 border border-slate-800 p-3.5 rounded-xl text-white outline-none focus:border-emerald-500 text-sm transition-all resize-none leading-relaxed"
+                  />
+                </div>
+
+                <div className="space-y-1">
+                  <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">CV File URL</label>
+                  <input
+                    type="url"
+                    name="cvUrl"
+                    value={formData.cvUrl}
+                    onChange={handleInputChange}
+                    className="w-full bg-slate-900 border border-slate-800 p-3.5 rounded-xl text-white outline-none focus:border-emerald-500 font-mono text-sm transition-all"
                   />
                 </div>
               </div>

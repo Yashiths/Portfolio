@@ -11,6 +11,7 @@ interface StatsData {
   statsProjectsVal?: number;
   statsProjectsLabel?: string;
   statsQuote?: string;
+  cvUrl?: string;
 }
 
 function runCountAnimation(
@@ -68,7 +69,8 @@ const AboutSection = () => {
     statsYearsLabel: "Years Experience",
     statsProjectsVal: 15,
     statsProjectsLabel: "Projects Done",
-    statsQuote: "Driven by fitness and code, I believe in consistency and continuous improvement."
+    statsQuote: "Driven by fitness and code, I believe in consistency and continuous improvement.",
+    cvUrl: "https://drive.google.com/file/d/1Xqm9HTOQXHr3ocTSFcykMhPcwUrusIa6/view?usp=drive_link"
   });
 
   // Listen to stats content in real-time
@@ -85,6 +87,7 @@ const AboutSection = () => {
             statsProjectsVal: Number(data.statsProjectsVal) || prev.statsProjectsVal,
             statsProjectsLabel: data.statsProjectsLabel || prev.statsProjectsLabel,
             statsQuote: data.statsQuote || prev.statsQuote,
+            cvUrl: data.cvUrl || prev.cvUrl,
           }));
         }
       }, (err) => {
@@ -120,8 +123,10 @@ const AboutSection = () => {
             <div className="flex flex-wrap gap-4">
               {/* Download CV Button */}
               <a 
-                href="/path-to-your-cv.pdf" 
+                href={stats.cvUrl || "https://drive.google.com/file/d/1Xqm9HTOQXHr3ocTSFcykMhPcwUrusIa6/view?usp=drive_link"} 
                 download 
+                target="_blank"
+                rel="noopener noreferrer"
                 className="bg-emerald-600 text-white hover:bg-emerald-700 dark:bg-emerald-500 dark:text-zinc-950 px-8 py-4 rounded-xl font-bold uppercase italic text-xs tracking-wider transition-all duration-300 flex items-center gap-2"
               >
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
